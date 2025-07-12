@@ -2,6 +2,8 @@
 
 This directory provides a sample service that loads ARK Survival Ascended map data from CSV files into PostgreSQL and exposes an API for finding the nearest locations. A minimal HTML UI is included for manual queries.
 
+For an overview of our GitHub enterprise and services, see [docs/GITHUB_ENTERPRISE.md](docs/GITHUB_ENTERPRISE.md).
+
 ## Contents
 
  - `data/` – CSV files per map
