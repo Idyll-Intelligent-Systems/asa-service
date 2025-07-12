@@ -1,0 +1,30 @@
+version: '3'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: asa_maps
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  app:
+    build: .
+    expose:
+      - "4000"
+    environment:
+      PGHOST: db
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: asa_maps
+    depends_on:
+      - db
+  frontend:
+    build: ./frontend
+    ports:
+      - "4000:80"
+    depends_on:
+      - app
+volumes:
+  db-data:

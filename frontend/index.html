@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ASA Maps Finder</title>
+  <link href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" rel="stylesheet" />
+  <style>
+    .asa-map-banner {
+      border-radius: 1em;
+      object-fit: cover;
+      width: 100%;
+      max-height: 340px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    }
+    .poi-image {
+      border-radius: 0.75em;
+      width: 100%;
+      max-width: 300px;
+      height: 160px;
+      object-fit: cover;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      margin-bottom: 0.75em;
+    }
+    .grid {
+      gap: 2.5rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+    .centered {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    /* Highlighted result box */
+    .highlight-box {
+      border: 2px solid #4caf50;
+      background-color: #f0fff0;
+      padding: 1rem;
+      border-radius: 0.5em;
+    }
+
+    /* Collapsible helper class */
+    .collapsed {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>ASA Nearest Finder</strong></li>
+    </ul>
+    <ul>
+      <li><a href="#">Maps</a></li>
+      <li><a href="#">Tips</a></li>
+      <li><a href="#" role="button">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <div class="centered" style="margin-bottom:2rem;">
+      <img class="asa-map-banner" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80"
+           alt="ASA Map Overview Banner" />
+    </div>
+    <div class="grid" style="grid-template-columns: 2fr 1fr;">
+      <section>
+        <hgroup>
+          <h2>Find the Nearest Location</h2>
+          <h3>Resources, Caves, Enemies &amp; More</h3>
+        </hgroup>
+        <p>Use this tool to find the closest point of interest on any ASA map based on coordinates.</p>
+        <form id="finderForm" class="grid" style="grid-template-columns:1fr 1fr;">
+          <div style="grid-column:1/3;display:flex;gap:0.5rem;align-items:center;">
+            <select id="map" style="flex:1;">
+            <option>Ragnarok</option>
+            <option>TheIsland</option>
+            <option>ScorchedEarth</option>
+            <option>Aberration</option>
+            <option>Extinction</option>
+            <option>TheCenter</option>
+            <option>Valguero</option>
+            <option>Genesis1</option>
+            <option>Genesis2</option>
+            <option>CrystalIsles</option>
+            <option>Fjordur</option>
+
+          </select>
+          <select id="category">
+
+            </select>
+            <button type="button" id="updateMapBtn">Update Map</button>
+          </div>
+          <select id="type" style="grid-column:1/3;">
+
+            <option value="resource">Resource</option>
+            <option value="tame">Tame</option>
+            <option value="hidden">Hidden Base</option>
+            <option value="water">Water Base</option>
+            <option value="cave">Cave</option>
+            <option value="drop">Drop</option>
+            <option value="enemy">Probable Enemy</option>
+            <option value="obelisk">Obelisk</option>
+          </select>
+          <select id="name"></select>
+          <input type="number" id="lat" placeholder="Latitude" required style="grid-column:1/2;" />
+          <input type="number" id="lon" placeholder="Longitude" required style="grid-column:2/3;" />
+          <button type="submit" style="grid-column:1/3;">Find Nearest</button>
+        </form>
+        <button id="toggleResults" class="collapsible-toggle" style="display:none;margin-top:1rem;grid-column:1/3;">Hide Results</button>
+        <div id="result" class="highlight-box collapsed" style="grid-column:1/3;"></div>
+      </section>
+      <aside>
+        <img class="poi-image" src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80" alt="Cave in a Forest" />
+        <div style="margin-bottom:2em;">
+          <strong>Caves & Hidden Bases</strong><br>
+          Discover the nearest caves or hidden base spots using your coordinates.
+        </div>
+        <img class="poi-image" src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=600&q=80" alt="Mountain Obelisk" />
+        <div>
+          <strong>Obelisks & Landmarks</strong><br>
+          Quickly locate obelisks, drops, or major map features.
+        </div>
+      </aside>
+    </div>
+    <div class="grid" style="margin-top:2.5rem;">
+      <section>
+        <hgroup>
+          <h2>Tame Arrow Calculator</h2>
+          <h3>Estimate tranq arrows needed</h3>
+        </hgroup>
+        <form id="tameForm" class="grid" style="grid-template-columns:1fr 1fr;">
+          <select id="dino">
+            <option>Raptor</option>
+            <option>Rex</option>
+            <option>Trike</option>
+            <option>Spino</option>
+          </select>
+          <input type="number" id="level" placeholder="Level" required />
+          <button type="submit" style="grid-column:1/3;">Calculate</button>
+        </form>
+        <div id="tameResult" style="margin-top:1.3rem"></div>
+      </section>
+    </div>
+    <div class="grid" style="margin-top:2.5rem;grid-template-columns: 1fr 1fr;">
+      <section>
+        <h3>How it Works</h3>
+        <p>This tool calculates the distance from your input coordinates to known POIs (Points of interest) on the selected map and gives you the nearest match.</p>
+      </section>
+      <section>
+        <h3>Data Sources</h3>
+        <p>Map data is sourced from community-contributed databases. Accuracy may vary based on map and content updates.</p>
+      </section>
+    </div>
+  </main>
+
+  <section aria-label="Subscribe example">
+    <div class="container">
+      <article>
+        <hgroup>
+          <h2>Get Map Updates</h2>
+          <h3>Subscribe for news, patches & ASA resources</h3>
+        </hgroup>
+        <form class="grid">
+          <input type="text" id="firstname" name="firstname" placeholder="First Name" aria-label="First Name" required />
+          <input type="email" id="email" name="email" placeholder="Email" aria-label="Email" required />
+          <button type="submit" onclick="event.preventDefault()">Subscribe</button>
+        </form>
+      </article>
+    </div>
+  </section>
+
+  <div class="container" style="text-align:center; margin-top: 1.5rem;">
+    <button id="updateBtn">Update map data</button>
+  </div>
+
+  <footer class="container">
+    <small><a href="#">Terms</a> • <a href="#">Privacy</a></small>
+  </footer>
+
+  <script>
+
+    const categorySelect = document.getElementById('category');
+    const nameSelect = document.getElementById('name');
+
+    async function loadNames() {
+      const map = document.getElementById('map').value;
+      const type = document.getElementById('type').value;
+      nameSelect.innerHTML = '<option>Loading...</option>';
+      try {
+        const res = await fetch(`/names?map=${encodeURIComponent(map)}&type=${encodeURIComponent(type)}`);
+        const names = await res.json();
+        nameSelect.innerHTML = '';
+        names.forEach(n => {
+          const opt = document.createElement('option');
+          opt.value = n;
+          opt.textContent = n;
+          nameSelect.appendChild(opt);
+        });
+      } catch(err) {
+        nameSelect.innerHTML = '<option>Error loading names</option>';
+      }
+    }
+
+    document.getElementById('map').addEventListener('change', loadNames);
+    categorySelect.addEventListener('change', loadNames);
+    window.addEventListener('DOMContentLoaded', loadNames);
+
+    const resultEl = document.getElementById('result');
+    const toggleEl = document.getElementById('toggleResults');
+
+    toggleEl.addEventListener('click', function() {
+      if (resultEl.classList.contains('collapsed')) {
+        resultEl.classList.remove('collapsed');
+        toggleEl.textContent = 'Hide Results';
+      } else {
+        resultEl.classList.add('collapsed');
+        toggleEl.textContent = 'Show Results';
+      }
+    });
+    async function updateNames(){
+      const map = document.getElementById('map').value;
+      const type = document.getElementById('type').value;
+      const res = await fetch('/types', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ map, type })
+      });
+      const data = await res.json();
+      const sel = document.getElementById('name');
+      sel.innerHTML = '';
+      data.forEach(n => {
+        const opt = document.createElement('option');
+        opt.textContent = n;
+        opt.value = n;
+        sel.appendChild(opt);
+      });
+    }
+
+    document.getElementById('map').addEventListener('change', updateNames);
+    document.getElementById('type').addEventListener('change', updateNames);
+    document.addEventListener('DOMContentLoaded', updateNames);
+
+
+
+    document.getElementById('finderForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const map = document.getElementById('map').value;
+      const type = document.getElementById('type').value;
+      const lat = parseFloat(document.getElementById('lat').value);
+      const lon = parseFloat(document.getElementById('lon').value);
+
+      const res = await fetch('/nearest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ map, type, lat, lon })
+      });
+
+      const data = await res.json();
+      const nearest = data[0];
+
+      let html = '<table><thead><tr><th>Name</th><th>Lat</th><th>Lon</th><th>Distance (km)</th></tr></thead><tbody>';
+      data.forEach(item => {
+        html += `<tr><td>${item.name}</td><td>${item.coords[0].toFixed(2)}</td><td>${item.coords[1].toFixed(2)}</td><td>${item.distance.toFixed(2)}</td></tr>`;
+      });
+      html += '</tbody></table>';
+      document.getElementById('result').innerHTML = html;
+
+
+      resultEl.innerHTML = `
+        <article>
+          <strong>Nearest ${type}</strong><br/>
+          <em>${nearest.name}</em> at ${nearest.coords.join(', ')} (~${nearest.distance.toFixed(2)} km)
+        </article>
+      `;
+      resultEl.classList.remove('collapsed');
+      toggleEl.style.display = 'inline-block';
+      toggleEl.textContent = 'Hide Results';
+
+      const result = document.getElementById('result');
+      result.innerHTML = `<strong>Nearest ${type}</strong>`;
+      data.forEach(item => {
+        const article = document.createElement('article');
+        article.innerHTML = `
+          <em>${item.name}</em> at ${item.coords.join(', ')} (~${item.distance.toFixed(2)} km)
+        `;
+        result.appendChild(article);
+      });
+    });
+
+    document.getElementById('updateMapBtn').addEventListener('click', async function() {
+      const map = document.getElementById('map').value;
+      await fetch('/update_map', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ map })
+      });
+    });
+
+    document.getElementById('tameForm').addEventListener('submit', async function(e){
+      e.preventDefault();
+      const dino = document.getElementById('dino').value;
+      const level = parseInt(document.getElementById('level').value,10);
+      const res = await fetch('/tame_arrows', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ dino, level })
+      });
+      const data = await res.json();
+      document.getElementById('tameResult').textContent = data.arrows ? `${data.arrows} arrows` : 'Not found';
+    });
+
+    document.getElementById('updateBtn').addEventListener('click', async () => {
+      const res = await fetch('/update_map', { method: 'POST' });
+      if (res.ok) {
+        alert('Map data updated successfully.');
+      } else {
+        alert('Failed to update map data.');
+      }
+    });
+  </script>
+</body>
+</html>
