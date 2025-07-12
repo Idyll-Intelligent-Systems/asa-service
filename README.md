@@ -83,6 +83,24 @@ docker compose -f asa-compose.yml up --build
 
 The application will be available on port `4000` when the containers are ready.
 
+### Dockerfile.full
+
+To run everything from a single image that also bundles PostgreSQL and nginx,
+build the included `Dockerfile.full`:
+
+```bash
+docker build -f Dockerfile.full -t asa-maps-full .
+```
+
+Start the container and expose port `4000`:
+
+```bash
+docker run -p 4000:4000 asa-maps-full
+```
+
+The service will preload official coordinates during the build and the web UI
+will be reachable at `http://localhost:4000` when the container starts.
+
 ### Push to Docker Hub
 
 Set `DOCKER_USERNAME` and `DOCKER_PASSKEY` then run `./push_dockerhub.sh` to build
