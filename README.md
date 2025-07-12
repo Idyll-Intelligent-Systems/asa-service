@@ -17,7 +17,7 @@ For an overview of our GitHub enterprise and services, see [docs/GITHUB_ENTERPRI
 ### Node & PostgreSQL
 
 
-1. Install Node.js.
+1. Install **Node.js 18 or newer**.
 2. Start a PostgreSQL server listening on `localhost:5432`. The helper script `./run.sh` uses the default credentials `postgres` / `postgres` and the database `asa_maps`. If your setup differs, provide `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD` and `PGDATABASE` when running the script. A quick Docker example is:
    ```bash
    docker run --name asa-pg -p 5432:5432 \
@@ -53,7 +53,7 @@ Run the helper script for your platform to install Node.js and other tools:
 ./install_deps_windows.ps1   # Windows
 ```
 
-These scripts install Node.js, npm and `jq`, then run `npm install` to fetch the required packages.
+These scripts install Node.js 18 (via your package manager), npm and `jq`, then run `npm install` to fetch the required packages.
 
 ### Docker Compose
 

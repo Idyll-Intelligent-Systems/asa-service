@@ -2,7 +2,9 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /app
 RUN apt-get update \
-    && apt-get install -y nodejs npm postgresql nginx curl jq \
+    && apt-get install -y curl \
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs postgresql nginx jq \
     && rm -rf /var/lib/apt/lists/*
 COPY backend.js ./backend.js
 COPY frontend ./frontend
