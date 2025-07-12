@@ -77,6 +77,7 @@ function parseLine(line){
 }
 
 function parseCoords(str){
+  if (!str || typeof str !== 'string') return [];
   str = str.trim();
   if (!str.startsWith('[')) return [];
   str = str.slice(1,-1);
