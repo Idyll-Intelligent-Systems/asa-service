@@ -10,8 +10,8 @@ until pg_isready -U postgres >/dev/null 2>&1; do
   sleep 1
 done
 # setup database and user password
-sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres'" || true
-sudo -u postgres psql -tc "SELECT 1 FROM pg_database WHERE datname='asa_maps'" | grep -q 1 || sudo -u postgres psql -c 'CREATE DATABASE asa_maps'
+runuser -u postgres -- psql -c "ALTER USER postgres PASSWORD 'postgres'" || true
+runuser -u postgres -- psql -tc "SELECT 1 FROM pg_database WHERE datname='asa_maps'" | grep -q 1 || runuser -u postgres -- psql -c 'CREATE DATABASE asa_maps'
 # start node backend
 node /app/backend.js &
 # start nginx in foreground
