@@ -11,46 +11,58 @@ For an overview of our GitHub enterprise and services, see [docs/GITHUB_ENTERPRI
 - `backend.js` – Node server that imports the CSVs and exposes `/nearest`
 - `frontend/` – Static HTML page and Dockerfile for an nginx container
 
-## Quick Start
 
-### Node & PostgreSQL
+## How to Run Backend and Frontend
 
+### Windows
 
-1. Install **Node.js 18 or newer**.
-2. Start a PostgreSQL server listening on `localhost:5432`. The default credentials `postgres` / `postgres` and the database `asa_maps`. If your setup differs, provide `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD` and `PGDATABASE` when running the script. A quick Docker example is:
-   ```bash
-   docker run --name asa-pg -p 5432:5432 \
-     -e POSTGRES_USER=postgres \
-     -e POSTGRES_PASSWORD=postgres \
-     -e POSTGRES_DB=asa_maps \
-     -d postgres:15
+1. Install **Node.js 18+**, **PostgreSQL**, and **Nginx** (use Chocolatey or official installers).
+2. Start PostgreSQL and create the database `asa_maps` with user `postgres`/`postgres`.
+3. In VS Code terminal, install backend dependencies:
+   ```powershell
+   npm install express pg
    ```
-   (You can also skip manual setup and use `docker compose up --build`, which provisions the database automatically.)
+4. Start the backend:
+   ```powershell
+   node backend.js
+   ```
+5. Copy `frontend\nginx.conf` to your Nginx config directory (e.g., `C:\nginx\conf\nginx.conf`).
+   Copy `frontend\index.html` to your Nginx html directory (e.g., `C:\nginx\html\index.html`).
+6. Start Nginx:
+   ```powershell
+   Start-Process "C:\nginx\nginx.exe"
+   ```
+7. Access the frontend at `http://localhost:8080` and backend API at `http://localhost:4000`.
 
-3. Install the required packages:
+### Linux/macOS
+
+1. Install **Node.js 18+**, **PostgreSQL**, and **Nginx**.
+2. Start PostgreSQL and create the database `asa_maps` with user `postgres`/`postgres`.
+3. In terminal, install backend dependencies:
    ```bash
    npm install express pg
-   # or
-   npm ci
    ```
-4. Launch the service:
+4. Start the backend:
    ```bash
-   ./run.sh
+   node backend.js
    ```
-5. Open `http://localhost:4000` to access the web UI and query the nearest locations.
+5. Copy `frontend/nginx.conf` to your Nginx config directory (e.g., `/etc/nginx/nginx.conf`).
+   Copy `frontend/index.html` to your Nginx html directory (e.g., `/usr/share/nginx/html/index.html`).
+6. Start Nginx:
+   ```bash
+   sudo systemctl start nginx
+   # or
+   sudo nginx
+   ```
+7. Access the frontend at `http://localhost:8080` and backend API at `http://localhost:4000`.
 
-### Installing Dependencies
-
-Run the helper script for your platform to install Node.js and other tools:
-
+Alternatively, run the helper script for your platform:
 ```bash
 ./install_deps_linux.sh      # Linux
 ./install_deps_macos.sh      # macOS
 ```
 
-```powershell
-./install_deps_windows.ps1   # Windows
-```
+---
 
 ## CSV Schema
 
