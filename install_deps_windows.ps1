@@ -1,2 +1,2 @@
 choco install -y nodejs jq
-npm install
+npm install express pg
