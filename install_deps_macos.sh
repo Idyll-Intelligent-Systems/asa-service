@@ -2,4 +2,4 @@
 set -euo pipefail
 brew update
 brew install node jq
-npm install
+npm install express pg
