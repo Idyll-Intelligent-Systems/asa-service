@@ -1,0 +1,336 @@
+const request = require('supertest');
+const { TestDatabase, TestApp, testUtils } = require('./test-setup');
+
+describe('ASA Service Integration Tests', () => {
+  let testDb;
+  let testApp;
+  let app;
+
+  beforeAll(async () => {
+    // Setup test database
+    testDb = new TestDatabase();
+    await testDb.connect();
+    await testDb.cleanup();
+    await testDb.setupSchema();
+    await testDb.seedData();
+
+    // Setup test application
+    testApp = new TestApp();
+    app = await testApp.start();
+  }, 60000);
+
+  afterAll(async () => {
+    await testApp.stop();
+    await testDb.cleanup();
+    await testDb.disconnect();
+  }, 30000);
+
+  describe('Database Integration', () => {
+    test('should connect to database successfully', async () => {
+      await testUtils.validateDatabaseConnection(testDb.getPool());
+    });
+
+    test('should have all required tables', async () => {
+      const requiredTables = [
+        'maps', 'creatures', 'creature_stats', 'map_regions',
+        'caves', 'resources', 'obelisks', 'supply_drops', 'base_spots',
+        'taming_calculations', 'system_status', 'data_update_log'
+      ];
+
+      for (const table of requiredTables) {
+        await testUtils.validateTableExists(testDb.getPool(), table);
+      }
+    });
+
+    test('should validate data integrity', async () => {
+      await testUtils.validateDataIntegrity(testDb.getPool());
+    });
+
+    test('should have sample data seeded', async () => {
+      const pool = testDb.getPool();
+      
+      const mapCount = await pool.query('SELECT COUNT(*) FROM maps');
+      expect(parseInt(mapCount.rows[0].count)).toBeGreaterThan(0);
+
+      const creatureCount = await pool.query('SELECT COUNT(*) FROM creatures');
+      expect(parseInt(creatureCount.rows[0].count)).toBeGreaterThan(0);
+
+      const regionCount = await pool.query('SELECT COUNT(*) FROM map_regions');
+      expect(parseInt(regionCount.rows[0].count)).toBeGreaterThan(0);
+    });
+  });
+
+  describe('API Core Endpoints', () => {
+    test('GET / should return API documentation', async () => {
+      const response = await request(app).get('/');
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body).toHaveProperty('name', 'ASA Service API');
+      expect(response.body).toHaveProperty('version');
+      expect(response.body).toHaveProperty('documentation');
+      expect(response.body.documentation).toHaveProperty('endpoints');
+    });
+
+    test('GET /health should return comprehensive health status', async () => {
+      const response = await request(app).get('/health');
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body).toHaveProperty('status', 'healthy');
+      expect(response.body).toHaveProperty('database');
+      expect(response.body).toHaveProperty('data_counts');
+      expect(response.body).toHaveProperty('uptime');
+      expect(response.body).toHaveProperty('memory');
+      expect(response.body.database.connected).toBe(true);
+    });
+
+    test('GET /status should return service status', async () => {
+      const response = await request(app).get('/status');
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body).toHaveProperty('api', 'operational');
+      expect(response.body).toHaveProperty('database');
+      expect(response.body).toHaveProperty('services');
+    });
+  });
+
+  describe('Maps API Integration', () => {
+    test('GET /api/maps should return all maps', async () => {
+      const response = await request(app).get('/api/maps');
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body).toHaveProperty('data');
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBeGreaterThan(0);
+      
+      response.body.data.forEach(testUtils.validateMapResponse);
+    });
+
+    test('GET /api/maps with filters should work', async () => {
+      const response = await request(app)
+        .get('/api/maps')
+        .query({ official: 'true', expansion: 'false' });
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body.data.every(map => map.official === true)).toBe(true);
+      expect(response.body.data.every(map => map.expansion === false)).toBe(true);
+    });
+
+    test('GET /api/maps/:slug should return specific map', async () => {
+      const response = await request(app).get('/api/maps/the-island');
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body).toHaveProperty('data');
+      testUtils.validateMapResponse(response.body.data);
+      expect(response.body.data.slug).toBe('the-island');
+    });
+
+    test('GET /api/maps/:slug/regions should return map regions', async () => {
+      const response = await request(app).get('/api/maps/the-island/regions');
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body).toHaveProperty('data');
+      expect(Array.isArray(response.body.data)).toBe(true);
+      
+      if (response.body.data.length > 0) {
+        response.body.data.forEach(testUtils.validateRegionResponse);
+      }
+    });
+
+    test('GET /api/maps/:slug/caves should return map caves', async () => {
+      const response = await request(app).get('/api/maps/the-island/caves');
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body).toHaveProperty('data');
+      expect(Array.isArray(response.body.data)).toBe(true);
+    });
+
+    test('GET /api/maps/:slug/resources should return map resources', async () => {
+      const response = await request(app).get('/api/maps/the-island/resources');
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body).toHaveProperty('data');
+      expect(Array.isArray(response.body.data)).toBe(true);
+    });
+  });
+
+  describe('Creatures API Integration', () => {
+    test('GET /api/creatures should return all creatures', async () => {
+      const response = await request(app).get('/api/creatures');
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body).toHaveProperty('data');
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBeGreaterThan(0);
+      
+      response.body.data.forEach(testUtils.validateCreatureResponse);
+    });
+
+    test('GET /api/creatures with search should work', async () => {
+      const response = await request(app)
+        .get('/api/creatures')
+        .query({ search: 'rex' });
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body.data.length).toBeGreaterThanOrEqual(0);
+      
+      if (response.body.data.length > 0) {
+        response.body.data.forEach(creature => {
+          expect(creature.name.toLowerCase()).toContain('rex');
+        });
+      }
+    });
+
+    test('GET /api/creatures with temperament filter should work', async () => {
+      const response = await request(app)
+        .get('/api/creatures')
+        .query({ temperament: 'passive' });
+      
+      testUtils.validateApiResponse(response);
+      
+      if (response.body.data.length > 0) {
+        response.body.data.forEach(creature => {
+          expect(creature.temperament).toBe('passive');
+        });
+      }
+    });
+
+    test('GET /api/creatures/:id should return specific creature', async () => {
+      // First get a creature ID
+      const listResponse = await request(app).get('/api/creatures');
+      expect(listResponse.body.data.length).toBeGreaterThan(0);
+      
+      const creatureId = listResponse.body.data[0].id;
+      const response = await request(app).get(`/api/creatures/${creatureId}`);
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body).toHaveProperty('data');
+      testUtils.validateCreatureResponse(response.body.data);
+      expect(response.body.data.id).toBe(creatureId);
+    });
+  });
+
+  describe('Search API Integration', () => {
+    test('GET /api/search should return search results', async () => {
+      const response = await request(app)
+        .get('/api/search')
+        .query({ q: 'island' });
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body).toHaveProperty('data');
+      expect(response.body).toHaveProperty('query', 'island');
+      expect(Array.isArray(response.body.data)).toBe(true);
+    });
+
+    test('GET /api/search with empty query should return error', async () => {
+      const response = await request(app).get('/api/search');
+      
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+    });
+
+    test('GET /api/search with type filter should work', async () => {
+      const response = await request(app)
+        .get('/api/search')
+        .query({ q: 'test', type: 'creatures' });
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body.data.every(item => item.type === 'creature')).toBe(true);
+    });
+  });
+
+  describe('Taming Calculator Integration', () => {
+    test('POST /api/taming/calculate should calculate taming requirements', async () => {
+      const tamingData = {
+        creature_name: 'T-Rex',
+        level: 1,
+        food_type: 'raw_meat',
+        taming_effectiveness: 1.0
+      };
+
+      const response = await request(app)
+        .post('/api/taming/calculate')
+        .send(tamingData);
+      
+      testUtils.validateApiResponse(response);
+      expect(response.body).toHaveProperty('data');
+      expect(response.body.data).toHaveProperty('creature_name', 'T-Rex');
+      expect(response.body.data).toHaveProperty('taming_time');
+      expect(response.body.data).toHaveProperty('food_required');
+      expect(response.body.data).toHaveProperty('narcotics_required');
+    });
+
+    test('POST /api/taming/calculate with invalid data should return error', async () => {
+      const invalidData = {
+        creature_name: '',
+        level: -1
+      };
+
+      const response = await request(app)
+        .post('/api/taming/calculate')
+        .send(invalidData);
+      
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+    });
+  });
+
+  describe('Error Handling Integration', () => {
+    test('should handle 404 errors properly', async () => {
+      const response = await request(app).get('/api/nonexistent');
+      
+      expect(response.status).toBe(404);
+      expect(response.body.success).toBe(false);
+      expect(response.body).toHaveProperty('error');
+      expect(response.body).toHaveProperty('available_endpoints');
+    });
+
+    test('should handle invalid map slug', async () => {
+      const response = await request(app).get('/api/maps/nonexistent-map');
+      
+      expect(response.status).toBe(404);
+      expect(response.body.success).toBe(false);
+    });
+
+    test('should handle invalid creature ID', async () => {
+      const response = await request(app).get('/api/creatures/999999');
+      
+      expect(response.status).toBe(404);
+      expect(response.body.success).toBe(false);
+    });
+  });
+
+  describe('Performance and Load Testing', () => {
+    test('should handle multiple concurrent requests', async () => {
+      const requests = Array(10).fill().map(() => 
+        request(app).get('/api/maps')
+      );
+
+      const responses = await Promise.all(requests);
+      
+      responses.forEach(response => {
+        testUtils.validateApiResponse(response);
+      });
+    });
+
+    test('should respond within acceptable time limits', async () => {
+      const start = Date.now();
+      const response = await request(app).get('/api/creatures');
+      const duration = Date.now() - start;
+      
+      testUtils.validateApiResponse(response);
+      expect(duration).toBeLessThan(5000); // 5 seconds max
+    });
+
+    test('should handle large search queries efficiently', async () => {
+      const start = Date.now();
+      const response = await request(app)
+        .get('/api/search')
+        .query({ q: 'a' }); // Single letter should match many items
+      
+      const duration = Date.now() - start;
+      
+      testUtils.validateApiResponse(response);
+      expect(duration).toBeLessThan(3000); // 3 seconds max for search
+    });
+  });
+});

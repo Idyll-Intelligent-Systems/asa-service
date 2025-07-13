@@ -1,6 +1,72 @@
 {
+  "name": "asa-service",
+  "version": "2.0.0-enhanced",
+  "description": "Comprehensive ARK: Survival Ascended Database API and Frontend",
+  "main": "src/backend/app.js",
+  "scripts": {
+    "start": "node src/backend/app.js",
+    "dev": "nodemon src/backend/app.js",
+    "setup": "node scripts/simple-setup.js",
+    "setup:full": "node scripts/dev-setup.js",
+    "db:migrate": "node scripts/migrate.js",
+    "db:seed": "node scripts/seed.js",
+    "db:reset": "npm run db:migrate && npm run db:seed",
+    "test": "jest --detectOpenHandles",
+    "test:unit": "jest tests/unit --detectOpenHandles",
+    "test:integration": "jest tests/integration --detectOpenHandles --runInBand",
+    "test:e2e": "jest tests/e2e --detectOpenHandles --runInBand --testTimeout=120000",
+    "test:watch": "jest --watch --detectOpenHandles",
+    "test:coverage": "jest --coverage --detectOpenHandles",
+    "lint": "eslint src tests scripts",
+    "lint:fix": "eslint src tests scripts --fix",
+    "clean": "node scripts/cleanup.js",
+    "build": "npm run lint && npm test",
+    "docker:build": "docker build -t asa-service .",
+    "docker:run": "docker run -p 3000:3000 asa-service"
+  },
+  "keywords": [
+    "ark",
+    "asa",
+    "survival-ascended",
+    "maps",
+    "coordinates",
+    "wiki",
+    "api",
+    "dododex",
+    "tame-calculator",
+    "creatures",
+    "regions",
+    "caves",
+    "resources"
+  ],
+  "author": "ASA Service Team",
+  "license": "MIT",
   "dependencies": {
-    "express": "^5.1.0",
-    "pg": "^8.16.3"
-  }
+    "axios": "^1.6.2",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "helmet": "^7.1.0",
+    "node-cron": "^3.0.2",
+    "pg": "^8.11.3",
+    "rate-limiter-flexible": "^2.4.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.55.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1",
+    "puppeteer": "^21.0.0",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Idyll-Intelligent-Systems/asa-service.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Idyll-Intelligent-Systems/asa-service/issues"
+  },
+  "homepage": "https://github.com/Idyll-Intelligent-Systems/asa-service#readme"
 }
