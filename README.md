@@ -10,7 +10,6 @@ For an overview of our GitHub enterprise and services, see [docs/GITHUB_ENTERPRI
    (coordinates sourced from the official ARK wiki using `fetch_wiki_coords.sh`)
 - `backend.js` – Node server that imports the CSVs and exposes `/nearest`
 - `frontend/` – Static HTML page and Dockerfile for an nginx container
-- `run.sh` – helper to start the backend with the UI
 
 ## Quick Start
 
@@ -18,7 +17,7 @@ For an overview of our GitHub enterprise and services, see [docs/GITHUB_ENTERPRI
 
 
 1. Install **Node.js 18 or newer**.
-2. Start a PostgreSQL server listening on `localhost:5432`. The helper script `./run.sh` uses the default credentials `postgres` / `postgres` and the database `asa_maps`. If your setup differs, provide `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD` and `PGDATABASE` when running the script. A quick Docker example is:
+2. Start a PostgreSQL server listening on `localhost:5432`. The default credentials `postgres` / `postgres` and the database `asa_maps`. If your setup differs, provide `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD` and `PGDATABASE` when running the script. A quick Docker example is:
    ```bash
    docker run --name asa-pg -p 5432:5432 \
      -e POSTGRES_USER=postgres \
@@ -52,59 +51,6 @@ Run the helper script for your platform to install Node.js and other tools:
 ```powershell
 ./install_deps_windows.ps1   # Windows
 ```
-
-These scripts install Node.js 18 (via your package manager), npm and `jq`, then run `npm install express pg` to fetch the required packages.
-
-### Docker Compose
-
-1. Ensure Docker and Docker Compose are installed.
-2. From this folder run:
-   ```bash
-   docker compose up --build
-   ```
-3. Navigate to `http://localhost:4000` once the containers are up. The compose file now starts a small nginx container that serves the static frontend and proxies requests to the backend service.
-
-The database volume `db-data` keeps your data between runs.
-
-To launch this service alongside the AI Assistant backend and UI, use
-`scripts/run_all_e2e_linux.sh` (or the macOS/Windows variants) from the project
-root.
-
-### Compose with official data
-
-The repository root also contains `asa-compose.yml`. This compose file
-builds the image, runs `fetch_wiki_coords.sh` during the build and also launches an nginx container for the frontend so the
-service starts with coordinates from the official ARK wiki. Run it from
-the project root:
-
-```bash
-docker compose -f asa-compose.yml up --build
-```
-
-The application will be available on port `4000` when the containers are ready.
-
-### Dockerfile.full
-
-To run everything from a single image that also bundles PostgreSQL and nginx,
-build the included `Dockerfile.full`:
-
-```bash
-docker build -f Dockerfile.full -t asa-maps-full .
-```
-
-Start the container and expose port `4000`:
-
-```bash
-docker run -p 4000:4000 asa-maps-full
-```
-
-The service will preload official coordinates during the build and the web UI
-will be reachable at `http://localhost:4000` when the container starts.
-
-### Push to Docker Hub
-
-Set `DOCKER_USERNAME` and `DOCKER_PASSKEY` then run `./push_dockerhub.sh` to build
-and push `idyll03/app:latest` to your Docker Hub account.
 
 ## CSV Schema
 

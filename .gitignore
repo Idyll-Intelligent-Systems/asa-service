@@ -1,0 +1,70 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Environment
+.env
+.env.*
+
+# Data
+/data/*.csv
+!/data/*.csv  # Keep sample CSVs, ignore others
+
+# Docker
+*.pid
+docker-compose.override.yml
+
+# Build
+/dist/
+/build/
+
+# Python (if any)
+__pycache__/
+*.pyc
+
+# Misc
+*.swp
+*.swo
+
+# Ignore generated scripts
+run_local.ps1
+run_local.sh
+full_entrypoint.ps1
+
+# Ignore database files
+*.sqlite
+*.db
+
+# Ignore coverage reports
+coverage/
+*.lcov
+
+# Ignore test output
+/test-output/
+
+# Ignore temp files
+*.tmp
+*.temp
+
+# Ignore backups
+*.bak
+*.old
+
+# Ignore system files
+.idea/
+*.iml
+
+# Ignore docs build
+/docs/_build/
