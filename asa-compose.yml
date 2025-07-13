@@ -10,7 +10,7 @@ services:
       - db-data:/var/lib/postgresql/data
   app:
     build:
-      context: ./ASA_Maps_FullTables
+      context: .
     expose:
       - "4000"
     environment:
@@ -23,7 +23,7 @@ services:
       - db
   frontend:
     build:
-      context: ./ASA_Maps_FullTables/frontend
+      context: ./frontend
     ports:
       - "4000:80"
     depends_on:
