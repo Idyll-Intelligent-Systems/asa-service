@@ -53,7 +53,7 @@ Run the helper script for your platform to install Node.js and other tools:
 ./install_deps_windows.ps1   # Windows
 ```
 
-These scripts install Node.js 18 (via your package manager), npm and `jq`, then run `npm install` to fetch the required packages.
+These scripts install Node.js 18 (via your package manager), npm and `jq`, then run `npm install express pg` to fetch the required packages.
 
 ### Docker Compose
 
