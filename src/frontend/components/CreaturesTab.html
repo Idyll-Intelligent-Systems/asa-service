@@ -1,0 +1,62 @@
+<!-- Creatures Tab Component -->
+<div class="tab-content" id="creaturesTab">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title"><i class="fas fa-paw"></i> Creatures Database</h2>
+    </div>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="creatureFilter">Filter</label>
+        <select id="creatureFilter">
+          <option value="">All Creatures</option>
+          <option value="tameable">Tameable Only</option>
+          <option value="rideable">Rideable Only</option>
+          <option value="aggressive">Aggressive</option>
+          <option value="passive">Passive</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="creatureSort">Sort By</label>
+        <select id="creatureSort">
+          <option value="">Default</option>
+          <option value="name">Name</option>
+          <option value="health">Health</option>
+          <option value="damage">Damage</option>
+        </select>
+      </div>
+    </div>
+    
+    <button class="btn" data-action="load-creatures" id="loadCreaturesBtn">
+      <span class="btn-content">
+        <i class="fas fa-paw"></i> Load Creatures
+      </span>
+      <span class="btn-loading hidden">
+        <i class="fas fa-spinner fa-spin"></i> Loading...
+      </span>
+    </button>
+  </div>
+
+  <!-- Creature Statistics -->
+  <div id="creatureStats" class="stats-grid" style="display: none;">
+    <div class="stat-card">
+      <div class="stat-value" id="totalCreatures">0</div>
+      <div class="stat-label">Total Creatures</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="tameableCreatures">0</div>
+      <div class="stat-label">Tameable</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="rideableCreatures">0</div>
+      <div class="stat-label">Rideable</div>
+    </div>
+  </div>
+
+  <div id="creaturesResults" class="card hidden">
+    <div class="card-header">
+      <h3 class="card-title">Creatures</h3>
+    </div>
+    <div id="creaturesContent"></div>
+  </div>
+</div>

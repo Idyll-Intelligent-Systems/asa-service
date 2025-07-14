@@ -1,0 +1,71 @@
+/* Font Awesome Icons - Essential CSS */
+
+.fa, .fas, .far, .fal, .fab {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", sans-serif;
+  font-weight: 900;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1;
+}
+
+/* Common Font Awesome icons using Unicode */
+.fa-search:before, .fas.fa-search:before { content: "\f002"; }
+.fa-home:before, .fas.fa-home:before { content: "\f015"; }
+.fa-user:before, .fas.fa-user:before { content: "\f007"; }
+.fa-cog:before, .fas.fa-cog:before { content: "\f013"; }
+.fa-heart:before, .fas.fa-heart:before { content: "\f004"; }
+.fa-star:before, .fas.fa-star:before { content: "\f005"; }
+.fa-check:before, .fas.fa-check:before { content: "\f00c"; }
+.fa-times:before, .fas.fa-times:before { content: "\f00d"; }
+.fa-plus:before, .fas.fa-plus:before { content: "\f067"; }
+.fa-minus:before, .fas.fa-minus:before { content: "\f068"; }
+.fa-edit:before, .fas.fa-edit:before { content: "\f044"; }
+.fa-trash:before, .fas.fa-trash:before { content: "\f1f8"; }
+.fa-eye:before, .fas.fa-eye:before { content: "\f06e"; }
+.fa-download:before, .fas.fa-download:before { content: "\f019"; }
+.fa-upload:before, .fas.fa-upload:before { content: "\f093"; }
+.fa-bars:before, .fas.fa-bars:before { content: "\f0c9"; }
+.fa-arrow-left:before, .fas.fa-arrow-left:before { content: "\f060"; }
+.fa-arrow-right:before, .fas.fa-arrow-right:before { content: "\f061"; }
+.fa-arrow-up:before, .fas.fa-arrow-up:before { content: "\f062"; }
+.fa-arrow-down:before, .fas.fa-arrow-down:before { content: "\f063"; }
+.fa-chevron-left:before, .fas.fa-chevron-left:before { content: "\f053"; }
+.fa-chevron-right:before, .fas.fa-chevron-right:before { content: "\f054"; }
+.fa-chevron-up:before, .fas.fa-chevron-up:before { content: "\f077"; }
+.fa-chevron-down:before, .fas.fa-chevron-down:before { content: "\f078"; }
+.fa-info:before, .fas.fa-info:before { content: "\f129"; }
+.fa-info-circle:before, .fas.fa-info-circle:before { content: "\f05a"; }
+.fa-exclamation:before, .fas.fa-exclamation:before { content: "\f12a"; }
+.fa-exclamation-triangle:before, .fas.fa-exclamation-triangle:before { content: "\f071"; }
+.fa-question:before, .fas.fa-question:before { content: "\f128"; }
+.fa-question-circle:before, .fas.fa-question-circle:before { content: "\f059"; }
+.fa-map:before, .fas.fa-map:before { content: "\f279"; }
+.fa-map-marker:before, .fas.fa-map-marker:before { content: "\f041"; }
+.fa-list:before, .fas.fa-list:before { content: "\f03a"; }
+.fa-th:before, .fas.fa-th:before { content: "\f00a"; }
+.fa-th-list:before, .fas.fa-th-list:before { content: "\f00b"; }
+.fa-filter:before, .fas.fa-filter:before { content: "\f0b0"; }
+.fa-sort:before, .fas.fa-sort:before { content: "\f0dc"; }
+.fa-sort-up:before, .fas.fa-sort-up:before { content: "\f0de"; }
+.fa-sort-down:before, .fas.fa-sort-down:before { content: "\f0dd"; }
+.fa-refresh:before, .fas.fa-refresh:before { content: "\f021"; }
+.fa-sync:before, .fas.fa-sync:before { content: "\f021"; }
+.fa-spinner:before, .fas.fa-spinner:before { content: "\f110"; }
+.fa-circle-notch:before, .fas.fa-circle-notch:before { content: "\f1ce"; }
+.fa-loading:before, .fas.fa-loading:before { content: "\f110"; }
+.fa-database:before, .fas.fa-database:before { content: "\f1c0"; }
+.fa-globe:before, .fas.fa-globe:before { content: "\f0ac"; }
+.fa-dragon:before, .fas.fa-dragon:before { content: "\f6d5"; }
+.fa-calculator:before, .fas.fa-calculator:before { content: "\f1ec"; }
+.fa-mountain:before, .fas.fa-mountain:before { content: "\f6fc"; }
+
+/* Font fallback system */
+.fa:before, .fas:before, .far:before, .fal:before, .fab:before {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "FontAwesome", 
+               "Font Awesome 5 Free", "Font Awesome 5 Pro",
+               "Segoe UI Symbol", "Segoe UI Emoji", "Apple Color Emoji", 
+               "Noto Color Emoji", sans-serif;
+}

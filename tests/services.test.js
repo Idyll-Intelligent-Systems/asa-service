@@ -1,6 +1,6 @@
-const WikiDataService = require('../src/backend/services/WikiDataService');
-const DodoDexService = require('../src/backend/services/DodoDexService');
-const DataPopulationService = require('../src/backend/services/DataPopulationService');
+const WikiDataService = require('../src/services/WikiDataService');
+const DodoDexService = require('../src/services/DodoDexService');
+const DataPopulationService = require('../src/services/DataPopulationService');
 
 // Mock axios for HTTP requests
 jest.mock('axios');

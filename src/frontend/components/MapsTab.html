@@ -1,0 +1,45 @@
+<!-- Maps Tab Component -->
+<div class="tab-content" id="mapsTab">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title"><i class="fas fa-map"></i> Interactive Maps</h2>
+    </div>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="mapType">Map Type</label>
+        <select id="mapType">
+          <option value="">All Maps</option>
+          <option value="official">Official</option>
+          <option value="dlc">DLC</option>
+          <option value="modded">Modded</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="mapSize">Map Size</label>
+        <select id="mapSize">
+          <option value="">Any Size</option>
+          <option value="small">Small</option>
+          <option value="medium">Medium</option>
+          <option value="large">Large</option>
+        </select>
+      </div>
+    </div>
+    
+    <button class="btn" data-action="load-maps" id="loadMapsBtn">
+      <span class="btn-content">
+        <i class="fas fa-map"></i> Load Maps
+      </span>
+      <span class="btn-loading hidden">
+        <i class="fas fa-spinner fa-spin"></i> Loading...
+      </span>
+    </button>
+  </div>
+
+  <div id="mapsResults" class="card hidden">
+    <div class="card-header">
+      <h3 class="card-title">Available Maps</h3>
+    </div>
+    <div id="mapsContent"></div>
+  </div>
+</div>

@@ -22,8 +22,8 @@ END $$;
 
 -- Create system status table first
 CREATE TABLE IF NOT EXISTS system_status (
-    key VARCHAR(100) PRIMARY KEY,
-    value TEXT,
+    status_key VARCHAR(100) PRIMARY KEY,
+    status_value TEXT,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

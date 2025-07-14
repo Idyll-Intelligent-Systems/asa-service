@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ASA Service - ARK: Survival Ascended Database</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/icons.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/modals.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <header class="header">
+      <h1>ASA Service</h1>
+      <p>ARK: Survival Ascended Database & Tools</p>
+    </header>
+
+    <!-- Status Indicator -->
+    <div class="status-indicator">
+      <div class="status-dot"></div>
+      <span id="statusText">Connecting...</span>
+      
+      <div class="theme-switcher">
+        <label for="themeSelector">Theme:</label>
+        <select id="themeSelector">
+          <option value="dark">Dark</option>
+          <option value="white">White</option>
+          <option value="grey-silver">Grey Silver</option>
+          <option value="silver-white-black">Silver White Black</option>
+        </select>
+      </div>
+      
+      <div class="sync-controls">
+        <button class="btn btn-sm" onclick="window.dataManager.syncAllData()">
+          <i class="fas fa-sync"></i>
+        </button>
+        <button class="btn btn-sm" onclick="window.dataManager.openDataUpdateModal()">
+          <i class="fas fa-database"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="search">
+        <i class="fas fa-search"></i> Search
+      </button>
+      <button class="nav-tab" data-tab="creatures">
+        <i class="fas fa-dragon"></i> Creatures
+      </button>
+      <button class="nav-tab" data-tab="maps">
+        <i class="fas fa-map"></i> Interactive Maps
+      </button>
+      <button class="nav-tab" data-tab="taming">
+        <i class="fas fa-calculator"></i> Taming
+      </button>
+      <button class="nav-tab" data-tab="regions">
+        <i class="fas fa-mountain"></i> Regions
+      </button>
+    </nav>
+
+    <!-- Search Tab -->
+    <div class="tab-content active" id="searchTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-search"></i> Search Database</h2>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="searchQuery">Search Query</label>
+            <input type="text" id="searchQuery" placeholder="Enter creature name, map, region, or item..." />
+          </div>
+          <div class="form-group">
+            <label for="searchType">Filter by Type</label>
+            <select id="searchType">
+              <option value="">All Types</option>
+              <option value="creature">Creatures</option>
+              <option value="map">Maps</option>
+              <option value="region">Regions</option>
+              <option value="resource">Resources</option>
+              <option value="cave">Caves</option>
+            </select>
+          </div>
+        </div>
+        
+        <button class="btn" onclick="window.searchComponent.performSearch()">
+          <i class="fas fa-search"></i> Search
+        </button>
+      </div>
+
+      <div id="searchResults" class="card hidden">
+        <div class="card-header">
+          <h3 class="card-title">Search Results</h3>
+        </div>
+        <div id="searchResultsContent"></div>
+      </div>
+    </div>
+
+    <!-- Creatures Tab -->
+    <div class="tab-content" id="creaturesTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-dragon"></i> Creatures Database</h2>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="creatureFilter">Filter</label>
+            <select id="creatureFilter">
+              <option value="">All Creatures</option>
+              <option value="tameable">Tameable Only</option>
+              <option value="flying">Flying</option>
+              <option value="aquatic">Aquatic</option>
+              <option value="terrestrial">Terrestrial</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="creatureMap">Map</label>
+            <select id="creatureMap">
+              <option value="">All Maps</option>
+            </select>
+          </div>
+        </div>
+        
+        <button class="btn" onclick="window.creaturesComponent.loadCreatures()">
+          <i class="fas fa-sync"></i> Load Creatures
+        </button>
+      </div>
+
+      <div id="creaturesResults" class="card hidden">
+        <div class="card-header">
+          <h3 class="card-title">Creatures</h3>
+        </div>
+        <div id="creaturesContent"></div>
+      </div>
+    </div>
+
+    <!-- Interactive Maps Tab -->
+    <div class="tab-content" id="mapsTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-map"></i> Interactive Maps</h2>
+        </div>
+        
+        <div class="maps-header">
+          <h3>Available Maps</h3>
+          <div class="maps-controls">
+            <select id="mapSort">
+              <option value="name">Sort by Name</option>
+              <option value="size">Sort by Size</option>
+              <option value="difficulty">Sort by Difficulty</option>
+            </select>
+            <button class="btn btn-secondary" onclick="window.mapsComponent.toggleAllMapDetails()">
+              <i class="fas fa-eye"></i> Toggle All Details
+            </button>
+          </div>
+        </div>
+        
+        <button class="btn" onclick="window.mapsComponent.loadMaps()">
+          <i class="fas fa-sync"></i> Load Maps
+        </button>
+      </div>
+
+      <div id="mapsResults" class="card hidden">
+        <div class="card-header">
+          <h3 class="card-title">Maps</h3>
+        </div>
+        <div id="mapsContent"></div>
+      </div>
+    </div>
+
+    <!-- Taming Calculator Tab -->
+    <div class="tab-content" id="tamingTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-calculator"></i> Taming Calculator</h2>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="tamingCreature">Creature</label>
+            <select id="tamingCreature">
+              <option value="">Select Creature...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="creatureLevel">Level</label>
+            <input type="number" id="creatureLevel" min="1" max="150" placeholder="Creature level..." />
+          </div>
+        </div>
+        
+        <button class="btn" onclick="window.tamingComponent.calculateTaming()">
+          <i class="fas fa-calculator"></i> Calculate Taming
+        </button>
+      </div>
+
+      <div id="tamingResults" class="card hidden">
+        <div class="card-header">
+          <h3 class="card-title">Taming Information</h3>
+        </div>
+        <div id="tamingContent"></div>
+      </div>
+    </div>
+
+    <!-- Regions Tab -->
+    <div class="tab-content" id="regionsTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-mountain"></i> Map Regions</h2>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="regionMap">Select Map</label>
+            <select id="regionMap">
+              <option value="">Choose Map...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="regionBiome">Biome Type</label>
+            <select id="regionBiome">
+              <option value="">All Biomes</option>
+              <option value="tropical">Tropical</option>
+              <option value="temperate">Temperate</option>
+              <option value="snow">Snow</option>
+              <option value="desert">Desert</option>
+              <option value="volcanic">Volcanic</option>
+            </select>
+          </div>
+        </div>
+        
+        <button class="btn" onclick="window.regionsComponent.loadRegions()">
+          <i class="fas fa-sync"></i> Load Regions
+        </button>
+      </div>
+
+      <div id="regionsResults" class="card hidden">
+        <div class="card-header">
+          <h3 class="card-title">Map Regions</h3>
+        </div>
+        <div id="regionsContent"></div>
+      </div>
+    </div>
+
+    <!-- Loading indicator -->
+    <div id="loadingIndicator" class="loading hidden">
+      <div class="spinner"></div>
+      Loading...
+    </div>
+
+    <!-- Alert container -->
+    <div id="alertContainer"></div>
+
+    <!-- Data Update Modal -->
+    <div id="dataUpdateModal" class="modal hidden">
+      <div class="modal-overlay" onclick="window.dataManager.closeDataUpdateModal()"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2><i class="fas fa-database"></i> Update Database with Official Data</h2>
+          <button class="modal-close" onclick="window.dataManager.closeDataUpdateModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="data-sources">
+            <h3>Available Data Sources</h3>
+            
+            <div class="source-card">
+              <div class="source-header">
+                <div class="source-icon">
+                  <i class="fas fa-globe"></i>
+                </div>
+                <div class="source-info">
+                  <h4>ARK Wiki</h4>
+                  <p>Official ARK: Survival Ascended Wiki data including creatures, maps, and items</p>
+                </div>
+                <div class="source-status" id="arkWikiStatus">
+                  <span class="status-badge ready">Ready</span>
+                </div>
+              </div>
+              <div class="source-actions">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="updateCreatures" checked>
+                  <span class="checkmark"></span>
+                  Creatures & Taming Data
+                </label>
+                <label class="checkbox-container">
+                  <input type="checkbox" id="updateMaps" checked>
+                  <span class="checkmark"></span>
+                  Maps & Regions
+                </label>
+                <label class="checkbox-container">
+                  <input type="checkbox" id="updateItems">
+                  <span class="checkmark"></span>
+                  Items & Resources
+                </label>
+              </div>
+            </div>
+
+            <div class="source-card">
+              <div class="source-header">
+                <div class="source-icon dododex">
+                  <i class="fas fa-dragon"></i>
+                </div>
+                <div class="source-info">
+                  <h4>Dododex</h4>
+                  <p>Comprehensive taming calculator data and creature statistics</p>
+                </div>
+                <div class="source-status" id="dododexStatus">
+                  <span class="status-badge ready">Ready</span>
+                </div>
+              </div>
+              <div class="source-actions">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="updateTaming" checked>
+                  <span class="checkmark"></span>
+                  Taming Calculations
+                </label>
+                <label class="checkbox-container">
+                  <input type="checkbox" id="updateStats">
+                  <span class="checkmark"></span>
+                  Creature Statistics
+                </label>
+                <label class="checkbox-container">
+                  <input type="checkbox" id="updateFood">
+                  <span class="checkmark"></span>
+                  Food & Kibble Data
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="update-options">
+            <h3>Update Options</h3>
+            <div class="options-grid">
+              <label class="checkbox-container">
+                <input type="checkbox" id="backupBefore" checked>
+                <span class="checkmark"></span>
+                Create backup before update
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox" id="incrementalUpdate">
+                <span class="checkmark"></span>
+                Incremental update (only new/changed data)
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox" id="validateData" checked>
+                <span class="checkmark"></span>
+                Validate data integrity
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox" id="notifyCompletion" checked>
+                <span class="checkmark"></span>
+                Send notification when complete
+              </label>
+            </div>
+          </div>
+
+          <div class="update-progress hidden" id="updateProgress">
+            <h3>Update Progress</h3>
+            <div class="progress-container">
+              <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <div class="progress-text" id="progressText">Preparing update...</div>
+            </div>
+            <div class="progress-details" id="progressDetails">
+              <div class="progress-item">
+                <span class="item-name">ARK Wiki Creatures</span>
+                <span class="item-status pending" id="status-ark-creatures">Pending</span>
+              </div>
+              <div class="progress-item">
+                <span class="item-name">ARK Wiki Maps</span>
+                <span class="item-status pending" id="status-ark-maps">Pending</span>
+              </div>
+              <div class="progress-item">
+                <span class="item-name">Dododex Taming</span>
+                <span class="item-status pending" id="status-dododex-taming">Pending</span>
+              </div>
+              <div class="progress-item">
+                <span class="item-name">Data Validation</span>
+                <span class="item-status pending" id="status-validation">Pending</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="update-log hidden" id="updateLog">
+            <h3>Update Log</h3>
+            <div class="log-container" id="logContainer">
+              <!-- Log entries will be added here -->
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="window.dataManager.closeDataUpdateModal()">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+          <button class="btn btn-primary" id="startUpdateBtn" onclick="window.dataManager.startDataUpdate()">
+            <i class="fas fa-download"></i> Start Update
+          </button>
+          <button class="btn btn-success hidden" id="completeUpdateBtn" onclick="window.dataManager.closeDataUpdateModal()">
+            <i class="fas fa-check"></i> Complete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Components -->
+  <script src="js/app.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/data-manager.js"></script>
+  
+  <script>
+    // Global application instances
+    let asaService, searchComponent, dataManager;
+    
+    // Initialize the application when DOM is loaded
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        console.log('🚀 Initializing ASA Service...');
+        
+        // Create the core service
+        asaService = new ASAService();
+        window.asaService = asaService;
+        
+        // Create components
+        searchComponent = new SearchComponent(asaService);
+        dataManager = new DataManager(asaService);
+        
+        // Make components globally accessible
+        window.searchComponent = searchComponent;
+        window.dataManager = dataManager;
+        
+        // Initialize the core service
+        await asaService.init();
+        console.log('✅ ASA Service initialized successfully');
+        
+      } catch (error) {
+        console.error('❌ Failed to initialize ASA Service:', error);
+      }
+      
+      console.log('✅ All components initialized');
+      console.log('🎉 Application ready!');
+    });
+  </script>
+</body>
+</html>

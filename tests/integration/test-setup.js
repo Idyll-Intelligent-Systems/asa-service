@@ -103,8 +103,9 @@ class TestApp {
     process.env.DATABASE_URL = config.database.connectionString;
     
     // Import and create application
-    const ApplicationModule = require('../../src/backend/app');
-    this.application = ApplicationModule;
+    const ASAServiceApp = require('../../app.js');
+    this.application = new ASAServiceApp();
+    await this.application.initialize();
     
     return this.application.getApp();
   }

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASA Service Integration Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: #2a2a2a;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success { background: #2d5a2d; border-left: 4px solid #4caf50; }
+        .error { background: #5a2d2d; border-left: 4px solid #f44336; }
+        .warning { background: #5a5a2d; border-left: 4px solid #ff9800; }
+        button {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        pre {
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>ASA Service Integration Test Suite</h1>
+    
+    <div class="test-section">
+        <h2>Backend API Tests</h2>
+        <button onclick="testBackendAPIs()">Run Backend Tests</button>
+        <div id="backend-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Frontend Functionality Tests</h2>
+        <button onclick="testFrontendFunctions()">Run Frontend Tests</button>
+        <div id="frontend-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>UI Button Tests</h2>
+        <button onclick="testUIButtons()">Test UI Buttons</button>
+        <div id="button-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Full Integration Test</h2>
+        <button onclick="runFullIntegrationTest()">Run Full Test</button>
+        <div id="integration-results"></div>
+    </div>
+
+    <script>
+        // Test results container
+        function addResult(containerId, message, type = 'success') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            container.appendChild(div);
+        }
+
+        function clearResults(containerId) {
+            document.getElementById(containerId).innerHTML = '';
+        }
+
+        // Backend API Tests
+        async function testBackendAPIs() {
+            clearResults('backend-results');
+            
+            const endpoints = [
+                { url: '/api/health', name: 'Health Check' },
+                { url: '/api/creatures', name: 'Creatures API' },
+                { url: '/api/maps', name: 'Maps API' },
+                { url: '/api/search?q=rex', name: 'Search API' },
+                { url: '/api/taming', name: 'Taming API' },
+                { url: '/api/regions?map=the-island', name: 'Regions API' }
+            ];
+
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(`http://localhost:3000${endpoint.url}`);
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        addResult('backend-results', `✅ ${endpoint.name}: Success (${response.status})`, 'success');
+                        console.log(`${endpoint.name} response:`, data);
+                    } else {
+                        addResult('backend-results', `❌ ${endpoint.name}: Failed (${response.status})`, 'error');
+                    }
+                } catch (error) {
+                    addResult('backend-results', `❌ ${endpoint.name}: Error - ${error.message}`, 'error');
+                }
+            }
+        }
+
+        // Frontend Function Tests
+        async function testFrontendFunctions() {
+            clearResults('frontend-results');
+            
+            // Open main application in new window to test
+            const appWindow = window.open('http://localhost:3000', 'appTest', 'width=1200,height=800');
+            
+            // Wait for app to load
+            setTimeout(() => {
+                try {
+                    const appDoc = appWindow.document;
+                    const appWin = appWindow;
+                    
+                    // Test if ASAService class is available
+                    if (appWin.app) {
+                        addResult('frontend-results', '✅ ASAService instance found', 'success');
+                        
+                        // Test global functions
+                        const functions = [
+                            'performSearch',
+                            'loadCreatures', 
+                            'loadMaps',
+                            'calculateTaming',
+                            'loadTameableCreatures',
+                            'loadRegions'
+                        ];
+                        
+                        functions.forEach(funcName => {
+                            if (typeof appWin[funcName] === 'function') {
+                                addResult('frontend-results', `✅ Global function ${funcName} is available`, 'success');
+                            } else {
+                                addResult('frontend-results', `❌ Global function ${funcName} is missing`, 'error');
+                            }
+                        });
+                        
+                        // Test if main elements exist
+                        const elements = [
+                            'searchQuery',
+                            'creatureFilter', 
+                            'mapType',
+                            'tamingCreature',
+                            'regionMap'
+                        ];
+                        
+                        elements.forEach(elementId => {
+                            const element = appDoc.getElementById(elementId);
+                            if (element) {
+                                addResult('frontend-results', `✅ Element ${elementId} found`, 'success');
+                            } else {
+                                addResult('frontend-results', `❌ Element ${elementId} not found`, 'error');
+                            }
+                        });
+                        
+                    } else {
+                        addResult('frontend-results', '❌ ASAService instance not found', 'error');
+                    }
+                    
+                    // Don't close the window immediately for manual testing
+                    // appWindow.close();
+                    
+                } catch (error) {
+                    addResult('frontend-results', `❌ Error accessing app window: ${error.message}`, 'error');
+                }
+            }, 3000);
+        }
+
+        // UI Button Tests
+        async function testUIButtons() {
+            clearResults('button-results');
+            
+            // Test if we can call functions programmatically
+            try {
+                const response = await fetch('http://localhost:3000/');
+                const html = await response.text();
+                
+                // Check if buttons exist in HTML
+                const buttonTests = [
+                    { search: 'onclick="performSearch()"', name: 'Search Button' },
+                    { search: 'onclick="loadCreatures()"', name: 'Load Creatures Button' },
+                    { search: 'onclick="loadMaps()"', name: 'Load Maps Button' },
+                    { search: 'onclick="calculateTaming()"', name: 'Calculate Taming Button' },
+                    { search: 'onclick="loadRegions()"', name: 'Load Regions Button' }
+                ];
+                
+                buttonTests.forEach(test => {
+                    if (html.includes(test.search)) {
+                        addResult('button-results', `✅ ${test.name} found in HTML`, 'success');
+                    } else {
+                        addResult('button-results', `❌ ${test.name} not found in HTML`, 'error');
+                    }
+                });
+                
+                // Check for tab buttons
+                if (html.includes('data-tab="search"') && html.includes('nav-tab')) {
+                    addResult('button-results', '✅ Tab navigation buttons found', 'success');
+                } else {
+                    addResult('button-results', '❌ Tab navigation buttons not found', 'error');
+                }
+                
+            } catch (error) {
+                addResult('button-results', `❌ Error fetching HTML: ${error.message}`, 'error');
+            }
+        }
+
+        // Full Integration Test
+        async function runFullIntegrationTest() {
+            clearResults('integration-results');
+            addResult('integration-results', '🚀 Starting full integration test...', 'warning');
+            
+            // Test 1: Backend Health
+            try {
+                const health = await fetch('http://localhost:3000/api/health');
+                const healthData = await health.json();
+                
+                if (health.ok && healthData.status === 'healthy') {
+                    addResult('integration-results', '✅ Backend is healthy', 'success');
+                } else {
+                    addResult('integration-results', '❌ Backend health check failed', 'error');
+                    return;
+                }
+            } catch (error) {
+                addResult('integration-results', '❌ Cannot connect to backend', 'error');
+                return;
+            }
+            
+            // Test 2: Frontend loads
+            try {
+                const frontendResponse = await fetch('http://localhost:3000/');
+                if (frontendResponse.ok) {
+                    addResult('integration-results', '✅ Frontend loads successfully', 'success');
+                } else {
+                    addResult('integration-results', '❌ Frontend failed to load', 'error');
+                    return;
+                }
+            } catch (error) {
+                addResult('integration-results', '❌ Frontend connection failed', 'error');
+                return;
+            }
+            
+            // Test 3: Data endpoints
+            const dataEndpoints = [
+                '/api/creatures',
+                '/api/maps',
+                '/api/search?q=test'
+            ];
+            
+            for (const endpoint of dataEndpoints) {
+                try {
+                    const response = await fetch(`http://localhost:3000${endpoint}`);
+                    const data = await response.json();
+                    
+                    if (response.ok && data.success) {
+                        addResult('integration-results', `✅ ${endpoint} returns data`, 'success');
+                    } else {
+                        addResult('integration-results', `⚠️ ${endpoint} returns no data but works`, 'warning');
+                    }
+                } catch (error) {
+                    addResult('integration-results', `❌ ${endpoint} failed: ${error.message}`, 'error');
+                }
+            }
+            
+            addResult('integration-results', '🎉 Integration test completed!', 'success');
+        }
+
+        // Auto-run basic test on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testBackendAPIs();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -16,25 +16,24 @@ CREATE INDEX IF NOT EXISTS idx_creatures_fulltext ON creatures
 
 CREATE INDEX IF NOT EXISTS idx_maps_fulltext ON maps 
     USING gin(to_tsvector('english', name || ' ' || COALESCE(description, '')));
-    description,
+
+-- Create materialized view for unified search across existing entities
+CREATE MATERIALIZED VIEW IF NOT EXISTS search_index AS
+SELECT 
+    'creature' as entity_type,
+    id as entity_id,
+    name,
+    COALESCE(description, '') as description,
     to_tsvector('english', name || ' ' || COALESCE(description, '')) as search_vector
 FROM creatures
 UNION ALL
 SELECT 
-    'region' as entity_type,
+    'map' as entity_type,
     id as entity_id,
     name,
-    description,
+    COALESCE(description, '') as description,
     to_tsvector('english', name || ' ' || COALESCE(description, '')) as search_vector
-FROM map_regions
-UNION ALL
-SELECT 
-    'cave' as entity_type,
-    id as entity_id,
-    name,
-    description,
-    to_tsvector('english', name || ' ' || COALESCE(description, '')) as search_vector
-FROM caves;
+FROM maps;
 
 -- Create index on the materialized view
 CREATE INDEX IF NOT EXISTS idx_search_index_vector ON search_index USING gin(search_vector);
@@ -47,10 +46,3 @@ BEGIN
     REFRESH MATERIALIZED VIEW search_index;
 END;
 $$ LANGUAGE plpgsql;
-
--- Log migration
-INSERT INTO system_status (key, value, description) VALUES 
-    ('migration_002', NOW()::TEXT, 'Added full-text search capabilities')
-ON CONFLICT (key) DO UPDATE SET 
-    value = EXCLUDED.value,
-    updated_at = CURRENT_TIMESTAMP;

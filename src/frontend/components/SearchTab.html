@@ -1,0 +1,34 @@
+<!-- Search Tab Component -->
+<div class="tab-content active" id="searchTab">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title"><i class="fas fa-search"></i> Universal Search</h2>
+    </div>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="searchQuery">Search Query</label>
+        <input type="text" id="searchQuery" placeholder="Search creatures, maps, or content..." />
+      </div>
+      <div class="form-group">
+        <label for="searchType">Search Type</label>
+        <select id="searchType">
+          <option value="">All Types</option>
+          <option value="creature" selected>Creatures</option>
+          <option value="map">Maps</option>
+        </select>
+      </div>
+    </div>
+    
+    <button class="btn" data-action="search">
+      <i class="fas fa-search"></i> Search
+    </button>
+  </div>
+
+  <div id="searchResults" class="card hidden">
+    <div class="card-header">
+      <h3 class="card-title">Search Results</h3>
+    </div>
+    <div id="searchResultsContent"></div>
+  </div>
+</div>

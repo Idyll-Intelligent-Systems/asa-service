@@ -1,0 +1,44 @@
+<!-- Taming Tab Component -->
+<div class="tab-content" id="tamingTab">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title"><i class="fas fa-heart"></i> Taming Calculator</h2>
+    </div>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="tamingCreature">Creature</label>
+        <select id="tamingCreature">
+          <option value="">Select Creature...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="creatureLevel">Level</label>
+        <input type="number" id="creatureLevel" placeholder="Enter creature level..." min="1" max="150" />
+      </div>
+    </div>
+    
+    <button class="btn" data-action="calculate-taming">
+      <i class="fas fa-calculator"></i> Calculate Taming
+    </button>
+  </div>
+
+  <div id="tamingResults" class="card hidden">
+    <div class="card-header">
+      <h3 class="card-title">Taming Information</h3>
+    </div>
+    <div id="tamingContent"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title"><i class="fas fa-list"></i> Tameable Creatures</h2>
+    </div>
+    
+    <button class="btn btn-secondary" data-action="load-tameable">
+      <i class="fas fa-list"></i> Load Tameable List
+    </button>
+    
+    <div id="tameableList"></div>
+  </div>
+</div>

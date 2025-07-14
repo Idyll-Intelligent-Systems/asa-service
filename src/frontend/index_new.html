@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ASA Service - ARK: Survival Ascended Database</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/navigation.css">
+  <link rel="stylesheet" href="/css/components.css">
+  
+  <style>
+    /* Additional component-specific styles */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+    }
+
+    label {
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+      transition: all 0.3s var(--ease-fluid);
+    }
+
+    /* Liquid Input Fields */
+    input, select, textarea {
+      background: var(--surface-1);
+      border: 1px solid var(--border-secondary);
+      border-radius: 16px;
+      padding: 1rem 1.25rem;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 500;
+      transition: all 0.4s var(--ease-fluid);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      position: relative;
+    }
+
+    /* Special styling for dropdowns */
+    select {
+      background: #6b7280; /* Grey background */
+      color: #ffffff;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 1rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      padding-right: 3rem;
+    }
+
+    select option {
+      background: #4b5563; /* Darker grey for options */
+      color: #ffffff;
+      padding: 0.5rem;
+    }
+
+    select:hover {
+      background: #5b6470; /* Slightly lighter on hover */
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--obelisk-blue);
+      background: var(--surface-2);
+      box-shadow: 
+        0 0 0 3px rgba(0, 122, 255, 0.15),
+        var(--glow-blue);
+      transform: translateY(-1px);
+    }
+
+    select:focus {
+      background: #5b6470; /* Keep grey on focus */
+    }
+
+    input::placeholder {
+      color: var(--text-tertiary);
+      transition: all 0.3s var(--ease-fluid);
+    }
+
+    input:focus::placeholder {
+      color: var(--text-disabled);
+      transform: translateY(-2px);
+    }
+
+    /* Loading indicator */
+    #loadingIndicator {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--background-glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: var(--glass-border);
+      border-radius: 20px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      z-index: 9999;
+      box-shadow: var(--shadow-xl);
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--surface-2);
+      border-top: 3px solid var(--obelisk-blue);
+      border-radius: 50%;
+      animation: liquidSpin 1s ease-in-out infinite;
+      position: relative;
+    }
+
+    .spinner::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      right: -3px;
+      bottom: -3px;
+      border: 3px solid transparent;
+      border-top: 3px solid var(--obelisk-green);
+      border-radius: 50%;
+      animation: liquidSpin 1.5s ease-in-out infinite reverse;
+    }
+
+    @keyframes liquidSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Liquid Data Display System */
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .data-item {
+      background: var(--surface-1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--border-secondary);
+      border-radius: 20px;
+      padding: 1.5rem;
+      transition: all 0.5s var(--ease-fluid);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .data-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg,
+        var(--obelisk-blue),
+        var(--obelisk-green),
+        var(--obelisk-red)
+      );
+      transform: scaleX(0);
+      transition: transform 0.4s var(--ease-fluid);
+    }
+
+    .data-item:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: var(--obelisk-blue);
+      background: var(--surface-2);
+      box-shadow: var(--shadow-lg), var(--glow-blue);
+    }
+
+    .data-item:hover::before {
+      transform: scaleX(1);
+    }
+
+    .data-item h4 {
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .data-item p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      line-height: 1.5;
+    }
+
+    .data-item strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Liquid Alert System */
+    .alert {
+      background: var(--surface-1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--border-secondary);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s var(--ease-fluid);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .alert::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--obelisk-blue), var(--obelisk-green));
+      transition: width 0.3s var(--ease-fluid);
+    }
+
+    .alert:hover::before {
+      width: 8px;
+    }
+
+    .alert-error {
+      border-color: rgba(255, 59, 48, 0.3);
+      background: rgba(255, 59, 48, 0.05);
+      box-shadow: 0 0 20px rgba(255, 59, 48, 0.1);
+    }
+
+    .alert-error::before {
+      background: var(--obelisk-red);
+    }
+
+    .alert-success {
+      border-color: rgba(48, 209, 88, 0.3);
+      background: rgba(48, 209, 88, 0.05);
+      box-shadow: 0 0 20px rgba(48, 209, 88, 0.1);
+    }
+
+    .alert-success::before {
+      background: var(--obelisk-green);
+    }
+
+    .alert-warning {
+      border-color: rgba(255, 204, 0, 0.3);
+      background: rgba(255, 204, 0, 0.05);
+      box-shadow: 0 0 20px rgba(255, 204, 0, 0.1);
+    }
+
+    .alert-warning::before {
+      background: linear-gradient(180deg, var(--obelisk-red), #ffcc00);
+    }
+
+    /* Liquid Stats Display System */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--surface-1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--border-secondary);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s var(--ease-fluid);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg,
+        rgba(255, 59, 48, 0.05),
+        rgba(48, 209, 88, 0.05),
+        rgba(0, 122, 255, 0.05)
+      );
+      opacity: 0;
+      transition: opacity 0.3s var(--ease-fluid);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      border-color: var(--obelisk-blue);
+      box-shadow: var(--shadow-xl), var(--glow-blue);
+    }
+
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.75rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .nav-tabs {
+        flex-direction: column;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .data-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Status Indicator -->
+    <div class="status-indicator">
+      <div class="status-dot"></div>
+      <span id="statusText">Connecting...</span>
+      <div class="theme-switcher">
+        <select id="themeSelector" aria-label="Theme selector">
+          <option value="dark">Obelisk Dark</option>
+          <option value="white">Authentic White</option>
+          <option value="grey-silver">Grey & Silver</option>
+          <option value="silver-white-black">Silver, White & Black</option>
+        </select>
+      </div>
+      <div class="sync-controls">
+        <button class="btn btn-secondary btn-sm" data-action="sync" title="Sync all data">
+          <i class="fas fa-sync-alt"></i> Sync
+        </button>
+        <button class="btn btn-primary btn-sm" data-action="open-update-modal" title="Update database with official data">
+          <i class="fas fa-database"></i> Update DB
+        </button>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+      <h1><i class="fas fa-dragon"></i> ASA Service</h1>
+      <p>ARK: Survival Ascended - Complete Database & Tools</p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="search">
+        <i class="fas fa-search"></i> Search
+      </button>
+      <button class="nav-tab" data-tab="creatures">
+        <i class="fas fa-paw"></i> Creatures
+      </button>
+      <button class="nav-tab" data-tab="maps">
+        <i class="fas fa-map"></i> Maps
+      </button>
+      <button class="nav-tab" data-tab="taming">
+        <i class="fas fa-heart"></i> Taming
+      </button>
+      <button class="nav-tab" data-tab="regions">
+        <i class="fas fa-mountain"></i> Regions
+      </button>
+    </div>
+
+    <!-- Tab Content Container -->
+    <div id="tabContent">
+      <!-- Search Tab -->
+      <div class="tab-content active" id="searchTab">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-search"></i> Universal Search</h2>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="searchQuery">Search Query</label>
+              <input type="text" id="searchQuery" placeholder="Search creatures, maps, or content..." />
+            </div>
+            <div class="form-group">
+              <label for="searchType">Search Type</label>
+              <select id="searchType">
+                <option value="">All Types</option>
+                <option value="creature" selected>Creatures</option>
+                <option value="map">Maps</option>
+              </select>
+            </div>
+          </div>
+          
+          <button class="btn" data-action="search">
+            <i class="fas fa-search"></i> Search
+          </button>
+        </div>
+
+        <div id="searchResults" class="card hidden">
+          <div class="card-header">
+            <h3 class="card-title">Search Results</h3>
+          </div>
+          <div id="searchResultsContent"></div>
+        </div>
+      </div>
+
+      <!-- Creatures Tab -->
+      <div class="tab-content" id="creaturesTab">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-paw"></i> Creatures Database</h2>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="creatureFilter">Filter</label>
+              <select id="creatureFilter">
+                <option value="">All Creatures</option>
+                <option value="tameable">Tameable Only</option>
+                <option value="rideable">Rideable Only</option>
+                <option value="aggressive">Aggressive</option>
+                <option value="passive">Passive</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="creatureSort">Sort By</label>
+              <select id="creatureSort">
+                <option value="">Default</option>
+                <option value="name">Name</option>
+                <option value="health">Health</option>
+                <option value="damage">Damage</option>
+              </select>
+            </div>
+          </div>
+          
+          <button class="btn" data-action="load-creatures">
+            <i class="fas fa-paw"></i> Load Creatures
+          </button>
+        </div>
+
+        <!-- Creature Statistics -->
+        <div id="creatureStats" class="stats-grid" style="display: none;">
+          <div class="stat-card">
+            <div class="stat-value" id="totalCreatures">0</div>
+            <div class="stat-label">Total Creatures</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="tameableCreatures">0</div>
+            <div class="stat-label">Tameable</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="rideableCreatures">0</div>
+            <div class="stat-label">Rideable</div>
+          </div>
+        </div>
+
+        <div id="creaturesResults" class="card hidden">
+          <div class="card-header">
+            <h3 class="card-title">Creatures</h3>
+          </div>
+          <div id="creaturesContent"></div>
+        </div>
+      </div>
+
+      <!-- Maps Tab -->
+      <div class="tab-content" id="mapsTab">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-map"></i> Interactive Maps</h2>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="mapType">Map Type</label>
+              <select id="mapType">
+                <option value="">All Maps</option>
+                <option value="official">Official</option>
+                <option value="dlc">DLC</option>
+                <option value="modded">Modded</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="mapSize">Map Size</label>
+              <select id="mapSize">
+                <option value="">Any Size</option>
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+              </select>
+            </div>
+          </div>
+          
+          <button class="btn" data-action="load-maps">
+            <i class="fas fa-map"></i> Load Maps
+          </button>
+        </div>
+
+        <div id="mapsResults" class="card hidden">
+          <div class="card-header">
+            <h3 class="card-title">Available Maps</h3>
+          </div>
+          <div id="mapsContent"></div>
+        </div>
+      </div>
+
+      <!-- Taming Tab -->
+      <div class="tab-content" id="tamingTab">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-heart"></i> Taming Calculator</h2>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="tamingCreature">Creature</label>
+              <select id="tamingCreature">
+                <option value="">Select Creature...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="creatureLevel">Level</label>
+              <input type="number" id="creatureLevel" placeholder="Enter creature level..." min="1" max="150" />
+            </div>
+          </div>
+          
+          <button class="btn" data-action="calculate-taming">
+            <i class="fas fa-calculator"></i> Calculate Taming
+          </button>
+        </div>
+
+        <div id="tamingResults" class="card hidden">
+          <div class="card-header">
+            <h3 class="card-title">Taming Information</h3>
+          </div>
+          <div id="tamingContent"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-list"></i> Tameable Creatures</h2>
+          </div>
+          
+          <button class="btn btn-secondary" data-action="load-tameable">
+            <i class="fas fa-list"></i> Load Tameable List
+          </button>
+          
+          <div id="tameableList"></div>
+        </div>
+      </div>
+
+      <!-- Regions Tab -->
+      <div class="tab-content" id="regionsTab">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-mountain"></i> Region Explorer</h2>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="regionMap">Map</label>
+              <select id="regionMap">
+                <option value="">Choose Map...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="regionBiome">Biome Type</label>
+              <select id="regionBiome">
+                <option value="">All Biomes</option>
+                <option value="forest">Forest</option>
+                <option value="desert">Desert</option>
+                <option value="snow">Snow</option>
+                <option value="ocean">Ocean</option>
+                <option value="cave">Cave</option>
+              </select>
+            </div>
+          </div>
+          
+          <button class="btn" data-action="load-regions">
+            <i class="fas fa-mountain"></i> Load Regions
+          </button>
+        </div>
+
+        <div id="regionsResults" class="card hidden">
+          <div class="card-header">
+            <h3 class="card-title">Regions</h3>
+          </div>
+          <div id="regionsContent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div id="loadingIndicator" class="hidden">
+    <div class="spinner"></div>
+    <span>Loading...</span>
+  </div>
+
+  <!-- JavaScript Files -->
+  <script src="/js/ASAService.js"></script>
+  <script src="/js/SearchComponent.js"></script>
+  <script src="/js/CreaturesComponent.js"></script>
+  <script src="/js/MapsComponent.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

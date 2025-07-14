@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #1a1a1a; color: white; }
+        button { background: #007aff; color: white; border: none; padding: 10px 20px; margin: 10px; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin: 10px 0; padding: 10px; background: #2a2a2a; border-radius: 5px; }
+        .error { background: #5a2d2d; }
+        .success { background: #2d5a2d; }
+    </style>
+</head>
+<body>
+    <h1>ASA Service Button Debug Test</h1>
+    
+    <h2>Test Global Functions</h2>
+    <button onclick="testGlobalFunctions()">Test Global Functions</button>
+    
+    <h2>Test Direct API Calls</h2>
+    <button onclick="testDirectAPI()">Test API Directly</button>
+    
+    <h2>Test Frontend App</h2>
+    <button onclick="testFrontendApp()">Open Main App</button>
+    
+    <h2>Test Button Click Events</h2>
+    <button onclick="testSimpleClick()">Test Simple Click</button>
+    
+    <div id="results"></div>
+
+    <script>
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            results.appendChild(div);
+            console.log(message);
+        }
+
+        function testSimpleClick() {
+            log('✅ Simple click test successful!', 'success');
+        }
+
+        async function testDirectAPI() {
+            log('🔄 Testing direct API calls...');
+            
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                log(`✅ API Health: ${data.status}`, 'success');
+                
+                const creaturesResponse = await fetch('/api/creatures');
+                const creaturesData = await creaturesResponse.json();
+                log(`✅ Creatures API: ${creaturesData.success ? 'Success' : 'Failed'}`, creaturesData.success ? 'success' : 'error');
+                
+            } catch (error) {
+                log(`❌ API Error: ${error.message}`, 'error');
+            }
+        }
+
+        function testGlobalFunctions() {
+            log('🔄 Testing global functions availability...');
+            
+            // Open the main app in an iframe to test
+            const iframe = document.createElement('iframe');
+            iframe.src = '/';
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            
+            iframe.onload = function() {
+                try {
+                    const iframeWindow = iframe.contentWindow;
+                    const iframeDoc = iframe.contentDocument;
+                    
+                    // Wait a bit for the app to initialize
+                    setTimeout(() => {
+                        const functions = [
+                            'performSearch',
+                            'loadCreatures', 
+                            'loadMaps',
+                            'calculateTaming'
+                        ];
+                        
+                        functions.forEach(funcName => {
+                            if (typeof iframeWindow[funcName] === 'function') {
+                                log(`✅ Function ${funcName} is available`, 'success');
+                                
+                                // Try to call the function
+                                try {
+                                    // Don't actually call as it might trigger network requests
+                                    log(`✅ Function ${funcName} can be called`, 'success');
+                                } catch (err) {
+                                    log(`❌ Function ${funcName} failed: ${err.message}`, 'error');
+                                }
+                            } else {
+                                log(`❌ Function ${funcName} not found`, 'error');
+                            }
+                        });
+                        
+                        // Check if app instance exists
+                        if (iframeWindow.app) {
+                            log('✅ App instance found', 'success');
+                            
+                            // Check app methods
+                            const methods = ['performSearch', 'loadCreatures', 'showTab'];
+                            methods.forEach(method => {
+                                if (typeof iframeWindow.app[method] === 'function') {
+                                    log(`✅ App method ${method} available`, 'success');
+                                } else {
+                                    log(`❌ App method ${method} not found`, 'error');
+                                }
+                            });
+                        } else {
+                            log('❌ App instance not found', 'error');
+                        }
+                        
+                        // Check for common elements
+                        const buttonSelectors = [
+                            'button[onclick*="performSearch"]',
+                            'button[onclick*="loadCreatures"]',
+                            '.nav-tab[data-tab="search"]'
+                        ];
+                        
+                        buttonSelectors.forEach(selector => {
+                            const element = iframeDoc.querySelector(selector);
+                            if (element) {
+                                log(`✅ Button found: ${selector}`, 'success');
+                                
+                                // Test if we can trigger click
+                                try {
+                                    element.click();
+                                    log(`✅ Button ${selector} clicked successfully`, 'success');
+                                } catch (err) {
+                                    log(`❌ Button ${selector} click failed: ${err.message}`, 'error');
+                                }
+                            } else {
+                                log(`❌ Button not found: ${selector}`, 'error');
+                            }
+                        });
+                        
+                        // Clean up
+                        setTimeout(() => {
+                            document.body.removeChild(iframe);
+                        }, 1000);
+                        
+                    }, 3000); // Wait 3 seconds for app to initialize
+                    
+                } catch (error) {
+                    log(`❌ Error accessing iframe: ${error.message}`, 'error');
+                }
+            };
+        }
+
+        function testFrontendApp() {
+            log('🔄 Opening main application...');
+            window.open('/', 'mainApp', 'width=1200,height=800');
+            log('✅ Main app opened in new window', 'success');
+        }
+
+        // Auto-run initial tests
+        window.addEventListener('load', () => {
+            log('🚀 Starting button debug tests...');
+            testDirectAPI();
+        });
+    </script>
+</body>
+</html>

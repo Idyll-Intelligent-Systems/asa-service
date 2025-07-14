@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ASA Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        button { padding: 10px 20px; margin: 10px; }
+        .result { margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 5px; }
+        pre { white-space: pre-wrap; max-height: 400px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <h1>ASA Service Debug Page</h1>
+    
+    <div>
+        <button onclick="testLoadMaps()">Test Load Maps</button>
+        <button onclick="testLoadCreatures()">Test Load Creatures</button>
+        <button onclick="testSearch()">Test Search</button>
+        <button onclick="testHealth()">Test Health</button>
+    </div>
+
+    <div id="results" class="result">
+        <h3>Results will appear here...</h3>
+    </div>
+
+    <script>
+        function log(message) {
+            console.log(message);
+            const results = document.getElementById('results');
+            results.innerHTML += `<p><strong>${new Date().toLocaleTimeString()}:</strong> ${message}</p>`;
+        }
+
+        async function testAPI(endpoint, description) {
+            try {
+                log(`Testing ${description}...`);
+                const response = await fetch(endpoint);
+                const data = await response.json();
+                log(`✅ ${description} Success`);
+                document.getElementById('results').innerHTML += `<h4>${description} Response:</h4><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                return data;
+            } catch (error) {
+                log(`❌ ${description} Failed: ${error.message}`);
+                document.getElementById('results').innerHTML += `<h4>${description} Error:</h4><pre>${error.message}</pre>`;
+                throw error;
+            }
+        }
+
+        async function testLoadMaps() {
+            await testAPI('/api/maps', 'Load Maps');
+        }
+
+        async function testLoadCreatures() {
+            await testAPI('/api/creatures', 'Load Creatures');
+        }
+
+        async function testSearch() {
+            await testAPI('/api/search?q=rex', 'Search for Rex');
+        }
+
+        async function testHealth() {
+            await testAPI('/api/health', 'Health Check');
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🚀 Debug page loaded successfully');
+            log('Testing basic API connectivity...');
+            testHealth();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+/* CSS Custom Properties and Theme Variables */
+
+:root {
+  /* ARK Obelisk Color Palette */
+  --obelisk-red: #ff3b30;
+  --obelisk-green: #30d158;
+  --obelisk-blue: #007aff;
+  --obelisk-black: #000000;
+  
+  /* Liquid UI Base Colors */
+  --primary: var(--obelisk-blue);
+  --primary-variant: rgba(0, 122, 255, 0.8);
+  --secondary: var(--obelisk-green);
+  --accent: var(--obelisk-red);
+  --success: var(--obelisk-green);
+  --warning: #ff9500;
+  --error: var(--obelisk-red);
+  
+  /* Liquid Background System */
+  --background-primary: radial-gradient(ellipse at center, #0a0a0a 0%, #000000 100%);
+  --background-secondary: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(10, 10, 10, 0.98) 100%);
+  --background-glass: rgba(255, 255, 255, 0.03);
+  --background-glass-hover: rgba(255, 255, 255, 0.06);
+  --background-glass-active: rgba(255, 255, 255, 0.09);
+  
+  /* Surface System with Depth */
+  --surface-0: rgba(255, 255, 255, 0.02);
+  --surface-1: rgba(255, 255, 255, 0.04);
+  --surface-2: rgba(255, 255, 255, 0.06);
+  --surface-3: rgba(255, 255, 255, 0.08);
+  --surface-4: rgba(255, 255, 255, 0.10);
+  --surface-5: rgba(255, 255, 255, 0.12);
+  
+  /* Typography */
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.75);
+  --text-tertiary: rgba(255, 255, 255, 0.55);
+  --text-disabled: rgba(255, 255, 255, 0.35);
+  
+  /* Borders & Dividers */
+  --border-primary: rgba(255, 255, 255, 0.08);
+  --border-secondary: rgba(255, 255, 255, 0.05);
+  --divider: rgba(255, 255, 255, 0.03);
+  
+  /* Shadows & Glows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.7);
+  
+  --glow-blue: 0 0 20px rgba(0, 122, 255, 0.3);
+  --glow-green: 0 0 20px rgba(48, 209, 88, 0.3);
+  --glow-red: 0 0 20px rgba(255, 59, 48, 0.3);
+  
+  /* Liquid Motion */
+  --motion-fast: 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  --motion-medium: 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+  --motion-slow: 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-fluid: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* Glassmorphism */
+  --glass-blur: blur(20px);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+  --glass-backdrop: backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* White Theme */
+html[data-theme='white'] {
+  --primary: #007aff;
+  --primary-variant: rgba(0, 122, 255, 0.8);
+  --secondary: #34c759;
+  --accent: #ff3b30;
+  --success: #34c759;
+  --warning: #ff9500;
+  --error: #ff3b30;
+  
+  --background-primary: #f2f2f7;
+  --background-secondary: #ffffff;
+  --background-glass: rgba(255, 255, 255, 0.7);
+  --background-glass-hover: rgba(255, 255, 255, 0.9);
+  --background-glass-active: rgba(255, 255, 255, 1);
+
+  --surface-0: #ffffff;
+  --surface-1: #ffffff;
+  --surface-2: #f2f2f7;
+  --surface-3: #e5e5ea;
+  --surface-4: #d1d1d6;
+  --surface-5: #c7c7cc;
+
+  --text-primary: #000000;
+  --text-secondary: #3c3c43b3;
+  --text-tertiary: #3c3c4380;
+  --text-disabled: #3c3c434d;
+
+  --border-primary: #d1d1d6;
+  --border-secondary: #e5e5ea;
+  --divider: #c7c7cc;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+
+  --glass-blur: blur(10px);
+  --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Grey and Silver Theme */
+html[data-theme='grey-silver'] {
+  --primary: #8e8e93;
+  --primary-variant: rgba(142, 142, 147, 0.8);
+  --secondary: #a2a2a7;
+  --accent: #c7c7cc;
+  --success: #34c759;
+  --warning: #ff9500;
+  --error: #ff3b30;
+
+  --background-primary: #e5e5ea;
+  --background-secondary: #f2f2f7;
+  --background-glass: rgba(210, 210, 215, 0.6);
+  --background-glass-hover: rgba(210, 210, 215, 0.8);
+  --background-glass-active: rgba(210, 210, 215, 1);
+
+  --surface-0: #f2f2f7;
+  --surface-1: #ffffff;
+  --surface-2: #e5e5ea;
+  --surface-3: #d1d1d6;
+  --surface-4: #c7c7cc;
+  --surface-5: #aeaeb2;
+
+  --text-primary: #000000;
+  --text-secondary: #3c3c43;
+  --text-tertiary: #8e8e93;
+  --text-disabled: #aeaeb2;
+
+  --border-primary: #c7c7cc;
+  --border-secondary: #d1d1d6;
+  --divider: #aeaeb2;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 15px 30px rgba(0, 0, 0, 0.1);
+  
+  --glass-blur: blur(12px);
+  --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Silver, White, and Black Theme */
+html[data-theme='silver-white-black'] {
+  --primary: #007aff;
+  --primary-variant: rgba(0, 122, 255, 0.8);
+  --secondary: #34c759;
+  --accent: #ff3b30;
+  --success: #34c759;
+  --warning: #ff9500;
+  --error: #ff3b30;
+
+  --background-primary: #1c1c1e;
+  --background-secondary: #000000;
+  --background-glass: rgba(50, 50, 52, 0.7);
+  --background-glass-hover: rgba(60, 60, 62, 0.8);
+  --background-glass-active: rgba(70, 70, 72, 0.9);
+
+  --surface-0: #2c2c2e;
+  --surface-1: #3a3a3c;
+  --surface-2: #48484a;
+  --surface-3: #545456;
+  --surface-4: #636366;
+  --surface-5: #767678;
+
+  --text-primary: #ffffff;
+  --text-secondary: #e5e5ea;
+  --text-tertiary: #c7c7cc;
+  --text-disabled: #8e8e93;
+
+  --border-primary: #48484a;
+  --border-secondary: #3a3a3c;
+  --divider: #2c2c2e;
+
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 5px 10px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.5);
+
+  --glass-blur: blur(15px);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Theme-specific overrides */
+html[data-theme='white'] .header h1,
+html[data-theme='grey-silver'] .header h1 {
+  -webkit-text-fill-color: initial;
+  color: #000;
+}
+
+html[data-theme='white'] .nav-tab.active,
+html[data-theme='grey-silver'] .nav-tab.active {
+  color: white;
+}
+
+html[data-theme='white'] body::before,
+html[data-theme='grey-silver'] body::before,
+html[data-theme='silver-white-black'] body::before {
+  display: none; /* Hiding animated background for other themes for now */
+}

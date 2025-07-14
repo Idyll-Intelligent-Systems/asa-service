@@ -1,0 +1,39 @@
+<!-- Regions Tab Component -->
+<div class="tab-content" id="regionsTab">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title"><i class="fas fa-mountain"></i> Region Explorer</h2>
+    </div>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="regionMap">Map</label>
+        <select id="regionMap">
+          <option value="">Choose Map...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="regionBiome">Biome Type</label>
+        <select id="regionBiome">
+          <option value="">All Biomes</option>
+          <option value="forest">Forest</option>
+          <option value="desert">Desert</option>
+          <option value="snow">Snow</option>
+          <option value="ocean">Ocean</option>
+          <option value="cave">Cave</option>
+        </select>
+      </div>
+    </div>
+    
+    <button class="btn" data-action="load-regions">
+      <i class="fas fa-mountain"></i> Load Regions
+    </button>
+  </div>
+
+  <div id="regionsResults" class="card hidden">
+    <div class="card-header">
+      <h3 class="card-title">Regions</h3>
+    </div>
+    <div id="regionsContent"></div>
+  </div>
+</div>

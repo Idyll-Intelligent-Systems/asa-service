@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Test</title>
+</head>
+<body>
+    <h1>Debug Test</h1>
+    <button onclick="testSearch()">Test Search</button>
+    <button onclick="testMaps()">Test Maps</button>
+    <button onclick="testCreatures()">Test Creatures</button>
+    <div id="results"></div>
+
+    <script>
+        async function testSearch() {
+            try {
+                console.log('Testing search...');
+                const response = await fetch('/api/search?q=rex');
+                const data = await response.json();
+                console.log('Search result:', data);
+                document.getElementById('results').innerHTML = `<h3>Search Results:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                console.error('Search error:', error);
+                document.getElementById('results').innerHTML = `<h3>Search Error:</h3><pre>${error.message}</pre>`;
+            }
+        }
+
+        async function testMaps() {
+            try {
+                console.log('Testing maps...');
+                const response = await fetch('/api/maps');
+                const data = await response.json();
+                console.log('Maps result:', data);
+                document.getElementById('results').innerHTML = `<h3>Maps Results:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                console.error('Maps error:', error);
+                document.getElementById('results').innerHTML = `<h3>Maps Error:</h3><pre>${error.message}</pre>`;
+            }
+        }
+
+        async function testCreatures() {
+            try {
+                console.log('Testing creatures...');
+                const response = await fetch('/api/creatures');
+                const data = await response.json();
+                console.log('Creatures result:', data);
+                document.getElementById('results').innerHTML = `<h3>Creatures Results:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                console.error('Creatures error:', error);
+                document.getElementById('results').innerHTML = `<h3>Creatures Error:</h3><pre>${error.message}</pre>`;
+            }
+        }
+    </script>
+</body>
+</html>

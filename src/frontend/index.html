@@ -1,0 +1,2930 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ASA Service - ARK: Survival Ascended Database</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <style>
+    /* System font stack - no external fonts to avoid loading issues */
+
+    /* Essential Font Awesome Icons - Inline CSS */
+    .fa, .fas, .far, .fal, .fab {
+      font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", sans-serif;
+      font-weight: 900;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+      display: inline-block;
+      font-style: normal;
+      font-variant: normal;
+      line-height: 1;
+    }
+    
+    /* Common Font Awesome icons using Unicode */
+    .fa-search:before, .fas.fa-search:before { content: "\f002"; }
+    .fa-home:before, .fas.fa-home:before { content: "\f015"; }
+    .fa-user:before, .fas.fa-user:before { content: "\f007"; }
+    .fa-cog:before, .fas.fa-cog:before { content: "\f013"; }
+    .fa-heart:before, .fas.fa-heart:before { content: "\f004"; }
+    .fa-star:before, .fas.fa-star:before { content: "\f005"; }
+    .fa-check:before, .fas.fa-check:before { content: "\f00c"; }
+    .fa-times:before, .fas.fa-times:before { content: "\f00d"; }
+    .fa-plus:before, .fas.fa-plus:before { content: "\f067"; }
+    .fa-minus:before, .fas.fa-minus:before { content: "\f068"; }
+    .fa-edit:before, .fas.fa-edit:before { content: "\f044"; }
+    .fa-trash:before, .fas.fa-trash:before { content: "\f1f8"; }
+    .fa-eye:before, .fas.fa-eye:before { content: "\f06e"; }
+    .fa-download:before, .fas.fa-download:before { content: "\f019"; }
+    .fa-upload:before, .fas.fa-upload:before { content: "\f093"; }
+    .fa-bars:before, .fas.fa-bars:before { content: "\f0c9"; }
+    .fa-arrow-left:before, .fas.fa-arrow-left:before { content: "\f060"; }
+    .fa-arrow-right:before, .fas.fa-arrow-right:before { content: "\f061"; }
+    .fa-arrow-up:before, .fas.fa-arrow-up:before { content: "\f062"; }
+    .fa-arrow-down:before, .fas.fa-arrow-down:before { content: "\f063"; }
+    .fa-chevron-left:before, .fas.fa-chevron-left:before { content: "\f053"; }
+    .fa-chevron-right:before, .fas.fa-chevron-right:before { content: "\f054"; }
+    .fa-chevron-up:before, .fas.fa-chevron-up:before { content: "\f077"; }
+    .fa-chevron-down:before, .fas.fa-chevron-down:before { content: "\f078"; }
+    .fa-info:before, .fas.fa-info:before { content: "\f129"; }
+    .fa-info-circle:before, .fas.fa-info-circle:before { content: "\f05a"; }
+    .fa-exclamation:before, .fas.fa-exclamation:before { content: "\f12a"; }
+    .fa-exclamation-triangle:before, .fas.fa-exclamation-triangle:before { content: "\f071"; }
+    .fa-question:before, .fas.fa-question:before { content: "\f128"; }
+    .fa-question-circle:before, .fas.fa-question-circle:before { content: "\f059"; }
+    .fa-map:before, .fas.fa-map:before { content: "\f279"; }
+    .fa-map-marker:before, .fas.fa-map-marker:before { content: "\f041"; }
+    .fa-list:before, .fas.fa-list:before { content: "\f03a"; }
+    .fa-th:before, .fas.fa-th:before { content: "\f00a"; }
+    .fa-th-list:before, .fas.fa-th-list:before { content: "\f00b"; }
+    .fa-filter:before, .fas.fa-filter:before { content: "\f0b0"; }
+    .fa-sort:before, .fas.fa-sort:before { content: "\f0dc"; }
+    .fa-sort-up:before, .fas.fa-sort-up:before { content: "\f0de"; }
+    .fa-sort-down:before, .fas.fa-sort-down:before { content: "\f0dd"; }
+    .fa-refresh:before, .fas.fa-refresh:before { content: "\f021"; }
+    .fa-sync:before, .fas.fa-sync:before { content: "\f021"; }
+    .fa-spinner:before, .fas.fa-spinner:before { content: "\f110"; }
+    .fa-circle-notch:before, .fas.fa-circle-notch:before { content: "\f1ce"; }
+    .fa-loading:before, .fas.fa-loading:before { content: "\f110"; }
+
+    /* Font fallback system */
+    .fa:before, .fas:before, .far:before, .fal:before, .fab:before {
+      font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "FontAwesome", 
+                   "Font Awesome 5 Free", "Font Awesome 5 Pro",
+                   "Segoe UI Symbol", "Segoe UI Emoji", "Apple Color Emoji", 
+                   "Noto Color Emoji", sans-serif;
+    }
+  </style>
+  <style>
+    /* Apple Liquid UI with ARK Obelisk Colors - Revolutionary Dark Theme */
+    :root {
+      /* ARK Obelisk Color Palette */
+      --obelisk-red: #ff3b30;
+      --obelisk-green: #30d158;
+      --obelisk-blue: #007aff;
+      --obelisk-black: #000000;
+      
+      /* Liquid UI Base Colors */
+      --primary: var(--obelisk-blue);
+      --primary-variant: rgba(0, 122, 255, 0.8);
+      --secondary: var(--obelisk-green);
+      --accent: var(--obelisk-red);
+      --success: var(--obelisk-green);
+      --warning: #ff9500;
+      --error: var(--obelisk-red);
+      
+      /* Liquid Background System */
+      --background-primary: radial-gradient(ellipse at center, #0a0a0a 0%, #000000 100%);
+      --background-secondary: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(10, 10, 10, 0.98) 100%);
+      --background-glass: rgba(255, 255, 255, 0.03);
+      --background-glass-hover: rgba(255, 255, 255, 0.06);
+      --background-glass-active: rgba(255, 255, 255, 0.09);
+      
+      /* Surface System with Depth */
+      --surface-0: rgba(255, 255, 255, 0.02);
+      --surface-1: rgba(255, 255, 255, 0.04);
+      --surface-2: rgba(255, 255, 255, 0.06);
+      --surface-3: rgba(255, 255, 255, 0.08);
+      --surface-4: rgba(255, 255, 255, 0.10);
+      --surface-5: rgba(255, 255, 255, 0.12);
+      
+      /* Typography */
+      --text-primary: rgba(255, 255, 255, 0.95);
+      --text-secondary: rgba(255, 255, 255, 0.75);
+      --text-tertiary: rgba(255, 255, 255, 0.55);
+      --text-disabled: rgba(255, 255, 255, 0.35);
+      
+      /* Borders & Dividers */
+      --border-primary: rgba(255, 255, 255, 0.08);
+      --border-secondary: rgba(255, 255, 255, 0.05);
+      --divider: rgba(255, 255, 255, 0.03);
+      
+      /* Shadows & Glows */
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+      --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.7);
+      
+      --glow-blue: 0 0 20px rgba(0, 122, 255, 0.3);
+      --glow-green: 0 0 20px rgba(48, 209, 88, 0.3);
+      --glow-red: 0 0 20px rgba(255, 59, 48, 0.3);
+      
+      /* Liquid Motion */
+      --motion-fast: 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+      --motion-medium: 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+      --motion-slow: 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+      --ease-fluid: cubic-bezier(0.4, 0.0, 0.2, 1);
+      --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      
+      /* Glassmorphism */
+      --glass-blur: blur(20px);
+      --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+      --glass-backdrop: backdrop-filter: blur(20px) saturate(180%);
+    }
+
+    /* White Theme */
+    html[data-theme='white'] {
+        --primary: #007aff;
+        --primary-variant: rgba(0, 122, 255, 0.8);
+        --secondary: #34c759;
+        --accent: #ff3b30;
+        --success: #34c759;
+        --warning: #ff9500;
+        --error: #ff3b30;
+        
+        --background-primary: #f2f2f7;
+        --background-secondary: #ffffff;
+        --background-glass: rgba(255, 255, 255, 0.7);
+        --background-glass-hover: rgba(255, 255, 255, 0.9);
+        --background-glass-active: rgba(255, 255, 255, 1);
+
+        --surface-0: #ffffff;
+        --surface-1: #ffffff;
+        --surface-2: #f2f2f7;
+        --surface-3: #e5e5ea;
+        --surface-4: #d1d1d6;
+        --surface-5: #c7c7cc;
+
+        --text-primary: #000000;
+        --text-secondary: #3c3c43b3;
+        --text-tertiary: #3c3c4380;
+        --text-disabled: #3c3c434d;
+
+        --border-primary: #d1d1d6;
+        --border-secondary: #e5e5ea;
+        --divider: #c7c7cc;
+
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+
+        --glass-blur: blur(10px);
+        --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    /* Grey and Silver Theme */
+    html[data-theme='grey-silver'] {
+        --primary: #8e8e93;
+        --primary-variant: rgba(142, 142, 147, 0.8);
+        --secondary: #a2a2a7;
+        --accent: #c7c7cc;
+        --success: #34c759;
+        --warning: #ff9500;
+        --error: #ff3b30;
+
+        --background-primary: #e5e5ea;
+        --background-secondary: #f2f2f7;
+        --background-glass: rgba(210, 210, 215, 0.6);
+        --background-glass-hover: rgba(210, 210, 215, 0.8);
+        --background-glass-active: rgba(210, 210, 215, 1);
+
+        --surface-0: #f2f2f7;
+        --surface-1: #ffffff;
+        --surface-2: #e5e5ea;
+        --surface-3: #d1d1d6;
+        --surface-4: #c7c7cc;
+        --surface-5: #aeaeb2;
+
+        --text-primary: #000000;
+        --text-secondary: #3c3c43;
+        --text-tertiary: #8e8e93;
+        --text-disabled: #aeaeb2;
+
+        --border-primary: #c7c7cc;
+        --border-secondary: #d1d1d6;
+        --divider: #aeaeb2;
+
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 15px 30px rgba(0, 0, 0, 0.1);
+        
+        --glass-blur: blur(12px);
+        --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    /* Silver, White, and Black Theme */
+    html[data-theme='silver-white-black'] {
+        --primary: #007aff;
+        --primary-variant: rgba(0, 122, 255, 0.8);
+        --secondary: #34c759;
+        --accent: #ff3b30;
+        --success: #34c759;
+        --warning: #ff9500;
+        --error: #ff3b30;
+
+        --background-primary: #1c1c1e;
+        --background-secondary: #000000;
+        --background-glass: rgba(50, 50, 52, 0.7);
+        --background-glass-hover: rgba(60, 60, 62, 0.8);
+        --background-glass-active: rgba(70, 70, 72, 0.9);
+
+        --surface-0: #2c2c2e;
+        --surface-1: #3a3a3c;
+        --surface-2: #48484a;
+        --surface-3: #545456;
+        --surface-4: #636366;
+        --surface-5: #767678;
+
+        --text-primary: #ffffff;
+        --text-secondary: #e5e5ea;
+        --text-tertiary: #c7c7cc;
+        --text-disabled: #8e8e93;
+
+        --border-primary: #48484a;
+        --border-secondary: #3a3a3c;
+        --divider: #2c2c2e;
+
+        --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+        --shadow-md: 0 5px 10px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.5);
+
+        --glass-blur: blur(15px);
+        --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Some overrides for light themes to make them look better */
+    html[data-theme='white'] .header h1,
+    html[data-theme='grey-silver'] .header h1 {
+        -webkit-text-fill-color: initial;
+        color: #000;
+    }
+
+    html[data-theme='white'] .nav-tab.active,
+    html[data-theme='grey-silver'] .nav-tab.active {
+        color: white;
+    }
+
+    html[data-theme='white'] body::before,
+    html[data-theme='grey-silver'] body::before,
+    html[data-theme='silver-white-black'] body::before {
+        display: none; /* Hiding animated background for other themes for now */
+    }
+
+    /* Global Reset & Base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, system-ui, sans-serif;
+      background: var(--background-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Liquid Background Animation */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(0, 122, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(48, 209, 88, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 59, 48, 0.06) 0%, transparent 50%);
+      animation: liquidFloat 20s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes liquidFloat {
+      0%, 100% { 
+        transform: scale(1) rotate(0deg);
+        opacity: 0.8;
+      }
+      50% { 
+        transform: scale(1.1) rotate(180deg);
+        opacity: 1;
+      }
+    }
+
+    /* Fluid Container System */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Liquid Header with Glassmorphism */
+    .header {
+      text-align: center;
+      margin-bottom: 4rem;
+      background: var(--background-glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: var(--glass-border);
+      border-radius: 32px;
+      padding: 3rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.6s var(--ease-fluid);
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, 
+        transparent, 
+        var(--obelisk-blue), 
+        var(--obelisk-green), 
+        var(--obelisk-red), 
+        transparent
+      );
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.3; transform: translateX(-100%); }
+      50% { opacity: 1; transform: translateX(100%); }
+    }
+
+    .header:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg), var(--glow-blue);
+      background: var(--background-glass-hover);
+    }
+
+    .header h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, 
+        var(--obelisk-blue) 0%, 
+        var(--obelisk-green) 50%, 
+        var(--obelisk-red) 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      animation: textGlow 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes textGlow {
+      0% { filter: brightness(1); }
+      100% { filter: brightness(1.2) drop-shadow(0 0 20px rgba(0, 122, 255, 0.3)); }
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 1.25rem;
+      font-weight: 400;
+      opacity: 0.9;
+      transition: all 0.3s var(--ease-fluid);
+    }
+
+    .header:hover p {
+      color: var(--text-primary);
+      opacity: 1;
+    }
+
+    /* Liquid Status Indicator */
+    .status-indicator {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      background: var(--background-glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: var(--glass-border);
+      border-radius: 50px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      z-index: 1000;
+      transition: all 0.4s var(--ease-fluid);
+      box-shadow: var(--shadow-md);
+    }
+
+    .status-indicator:hover {
+      transform: scale(1.05);
+      background: var(--background-glass-hover);
+      box-shadow: var(--shadow-lg), var(--glow-green);
+    }
+
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: 1rem;
+    }
+
+    .theme-switcher select {
+      background: var(--surface-1);
+      border: 1px solid var(--border-secondary);
+      border-radius: 12px;
+      padding: 0.5rem 0.75rem;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    
+    select option {
+      background: var(--background-secondary);
+      color: var(--text-primary);
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--obelisk-green);
+      box-shadow: 0 0 15px var(--obelisk-green);
+      animation: liquidPulse 2s ease-in-out infinite;
+      position: relative;
+    }
+
+    .sync-controls {
+      margin-left: 1rem;
+    }
+
+    .sync-controls .btn {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      border-radius: 8px;
+    }
+
+    .status-dot::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 50%;
+      background: inherit;
+      opacity: 0.3;
+      animation: liquidRipple 2s ease-in-out infinite;
+    }
+
+    @keyframes liquidPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.8; }
+    }
+
+    @keyframes liquidRipple {
+      0% { transform: scale(1); opacity: 0.3; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+
+    /* Revolutionary Navigation */
+    .nav-tabs {
+      display: flex;
+      background: var(--background-glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: var(--glass-border);
+      border-radius: 24px;
+      padding: 0.5rem;
+      margin-bottom: 3rem;
+      gap: 0.25rem;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-tabs::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg,
+        rgba(0, 122, 255, 0.1) 0%,
+        rgba(48, 209, 88, 0.1) 50%,
+        rgba(255, 59, 48, 0.1) 100%
+      );
+      opacity: 0;
+      transition: opacity 0.3s var(--ease-fluid);
+    }
+
+    .nav-tabs:hover::before {
+      opacity: 1;
+    }
+
+    .nav-tab {
+      flex: 1;
+      padding: 1.25rem 1.5rem;
+      background: transparent;
+      border: none;
+      border-radius: 18px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.4s var(--ease-fluid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-tab::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--surface-2);
+      opacity: 0;
+      transition: all 0.3s var(--ease-fluid);
+      border-radius: inherit;
+    }
+
+    .nav-tab:hover {
+      color: var(--text-primary);
+      transform: translateY(-2px);
+    }
+
+    .nav-tab:hover::before {
+      opacity: 1;
+    }
+
+    .nav-tab.active {
+      color: var(--text-primary);
+      background: linear-gradient(135deg, 
+        var(--obelisk-blue) 0%, 
+        var(--obelisk-green) 100%
+      );
+      box-shadow: var(--shadow-md), var(--glow-blue);
+      transform: translateY(-1px);
+    }
+
+    .nav-tab.active::before {
+      opacity: 0;
+    }
+
+    .nav-tab i {
+      transition: all 0.3s var(--ease-fluid);
+    }
+
+    .nav-tab:hover i {
+      transform: scale(1.2);
+    }
+
+    .nav-tab.active i {
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+    }
+
+    /* Liquid Glass Cards */
+    .card {
+      background: var(--background-glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: var(--glass-border);
+      border-radius: 28px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s var(--ease-fluid);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.05),
+        transparent
+      );
+      transition: left 0.6s var(--ease-fluid);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      background: var(--background-glass-hover);
+      box-shadow: var(--shadow-lg), var(--glow-blue);
+      border-color: rgba(0, 122, 255, 0.2);
+    }
+
+    .card:hover::before {
+      left: 100%;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-primary);
+      position: relative;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .card-title i {
+      font-size: 1.25rem;
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Fluid Form System */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+    }
+
+    label {
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+      transition: all 0.3s var(--ease-fluid);
+    }
+
+    /* Liquid Input Fields */
+    input, select, textarea {
+      background: var(--surface-1);
+      border: 1px solid var(--border-secondary);
+      border-radius: 16px;
+      padding: 1rem 1.25rem;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 500;
+      transition: all 0.4s var(--ease-fluid);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      position: relative;
+    }
+
+    /* Special styling for dropdowns */
+    select {
+      background: #6b7280; /* Grey background */
+      color: #ffffff;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 1rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      padding-right: 3rem;
+    }
+
+    select option {
+      background: #4b5563; /* Darker grey for options */
+      color: #ffffff;
+      padding: 0.5rem;
+    }
+
+    select:hover {
+      background: #5b6470; /* Slightly lighter on hover */
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--obelisk-blue);
+      background: var(--surface-2);
+      box-shadow: 
+        0 0 0 3px rgba(0, 122, 255, 0.15),
+        var(--glow-blue);
+      transform: translateY(-1px);
+    }
+
+    select:focus {
+      background: #5b6470; /* Keep grey on focus */
+    }
+
+    input::placeholder {
+      color: var(--text-tertiary);
+      transition: all 0.3s var(--ease-fluid);
+    }
+
+    input:focus::placeholder {
+      color: var(--text-disabled);
+      transform: translateY(-2px);
+    }
+
+    /* Revolutionary Liquid Buttons */
+    .btn {
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 1rem 2rem;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.4s var(--ease-fluid);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transition: left 0.6s var(--ease-fluid);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: var(--shadow-lg), var(--glow-blue);
+      background: linear-gradient(135deg, var(--obelisk-green), var(--obelisk-blue));
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      background: var(--surface-2);
+    }
+
+    .btn-success { 
+      background: linear-gradient(135deg, var(--obelisk-green), #32d74b);
+    }
+    
+    .btn-danger { 
+      background: linear-gradient(135deg, var(--obelisk-red), #ff453a);
+    }
+    
+    .btn-secondary { 
+      background: var(--surface-2);
+      color: var(--text-primary);
+      border: 1px solid var(--border-primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-3);
+      box-shadow: var(--shadow-md), 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .btn i {
+      transition: all 0.3s var(--ease-fluid);
+    }
+
+    .btn:hover i {
+      transform: scale(1.2);
+    }
+
+    /* Fluid Tab Content */
+    .tab-content {
+      display: none;
+      animation: fadeSlideIn 0.6s var(--ease-fluid);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeSlideIn {
+      from { 
+        opacity: 0; 
+        transform: translateY(20px) scale(0.95);
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Liquid Data Display System */
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .results-table th, .results-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-primary);
+    }
+
+    .results-table th {
+        font-weight: 600;
+        color: var(--text-primary);
+        background-color: var(--surface-1);
+    }
+
+    .results-table tbody tr:hover {
+        background-color: var(--surface-2);
+    }
+
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .data-item {
+      background: var(--surface-1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--border-secondary);
+      border-radius: 20px;
+      padding: 1.5rem;
+      transition: all 0.5s var(--ease-fluid);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .data-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg,
+        var(--obelisk-blue),
+        var(--obelisk-green),
+        var(--obelisk-red)
+      );
+      transform: scaleX(0);
+      transition: transform 0.4s var(--ease-fluid);
+    }
+
+    .data-item:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: var(--obelisk-blue);
+      background: var(--surface-2);
+      box-shadow: var(--shadow-lg), var(--glow-blue);
+    }
+
+    .data-item:hover::before {
+      transform: scaleX(1);
+    }
+
+    .data-item h4 {
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .data-item p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      line-height: 1.5;
+    }
+
+    .data-item strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Liquid Loading States */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      color: var(--text-secondary);
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--surface-2);
+      border-top: 3px solid var(--obelisk-blue);
+      border-radius: 50%;
+      animation: liquidSpin 1s ease-in-out infinite;
+      position: relative;
+    }
+
+    .spinner::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      right: -3px;
+      bottom: -3px;
+      border: 3px solid transparent;
+      border-top: 3px solid var(--obelisk-green);
+      border-radius: 50%;
+      animation: liquidSpin 1.5s ease-in-out infinite reverse;
+    }
+
+    @keyframes liquidSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Liquid Alert System */
+    .alert {
+      background: var(--surface-1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--border-secondary);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s var(--ease-fluid);
+    }
+
+    .alert::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--obelisk-blue), var(--obelisk-green));
+      transition: width 0.3s var(--ease-fluid);
+    }
+
+    .alert:hover::before {
+      width: 8px;
+    }
+
+    .alert-error {
+      border-color: rgba(255, 59, 48, 0.3);
+      background: rgba(255, 59, 48, 0.05);
+      box-shadow: 0 0 20px rgba(255, 59, 48, 0.1);
+    }
+
+    .alert-error::before {
+      background: var(--obelisk-red);
+    }
+
+    .alert-success {
+      border-color: rgba(48, 209, 88, 0.3);
+      background: rgba(48, 209, 88, 0.05);
+      box-shadow: 0 0 20px rgba(48, 209, 88, 0.1);
+    }
+
+    .alert-success::before {
+      background: var(--obelisk-green);
+    }
+
+    .alert-warning {
+      border-color: rgba(255, 204, 0, 0.3);
+      background: rgba(255, 204, 0, 0.05);
+      box-shadow: 0 0 20px rgba(255, 204, 0, 0.1);
+    }
+
+    .alert-warning::before {
+      background: linear-gradient(180deg, var(--obelisk-red), #ffcc00);
+    }
+
+    /* Liquid Stats Display System */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--surface-1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--border-secondary);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s var(--ease-fluid);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg,
+        rgba(255, 59, 48, 0.05),
+        rgba(48, 209, 88, 0.05),
+        rgba(0, 122, 255, 0.05)
+      );
+      opacity: 0;
+      transition: opacity 0.3s var(--ease-fluid);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      border-color: var(--obelisk-blue);
+      box-shadow: var(--shadow-xl), var(--glow-blue);
+    }
+
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.75rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Liquid Search Results */
+    .search-result {
+      background: var(--surface-1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-secondary);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s var(--ease-fluid);
+    }
+
+    .search-result::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg,
+        var(--obelisk-blue),
+        var(--obelisk-green),
+        var(--obelisk-red)
+      );
+      transform: scaleX(0);
+      transition: transform 0.3s var(--ease-fluid);
+    }
+
+    .search-result:hover {
+      border-color: var(--obelisk-blue);
+      transform: translateY(-4px);
+      background: var(--surface-2);
+      box-shadow: var(--shadow-lg), var(--glow-blue);
+    }
+
+    .search-result:hover::before {
+      transform: scaleX(1);
+    }
+
+    .search-result h4 {
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+    }
+
+    .search-result .type {
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      display: inline-block;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Liquid Responsive Design System */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .liquid-nav {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: 1rem;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .nav-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .hero-section {
+        padding: 2rem 0;
+      }
+
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.1rem;
+      }
+
+      .control-panel {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .nav-tabs {
+        flex-direction: column;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .data-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+
+      .liquid-btn {
+        padding: 0.875rem 1.5rem;
+        font-size: 0.9rem;
+      }
+
+      .data-item h4,
+      .search-result h4 {
+        font-size: 1.1rem;
+      }
+
+      .stat-value {
+        font-size: 1.75rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Interactive Map Styles */
+    .interactive-maps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .interactive-map-card {
+      background: var(--surface-1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--border-secondary);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: all 0.5s var(--ease-fluid);
+      position: relative;
+    }
+
+    .interactive-map-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--obelisk-blue);
+      box-shadow: var(--shadow-xl), var(--glow-blue);
+    }
+
+    .map-header {
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-secondary);
+    }
+
+    .map-header h3 {
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .map-type {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .map-type.official {
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      color: white;
+    }
+
+    .map-type.modded {
+      background: linear-gradient(135deg, var(--obelisk-red), #ff6b35);
+      color: white;
+    }
+
+    .map-image-container {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .map-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s var(--ease-fluid);
+    }
+
+    .interactive-map-card:hover .map-image {
+      transform: scale(1.1);
+    }
+
+    .map-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8));
+      display: flex;
+      align-items: flex-end;
+      padding: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s var(--ease-fluid);
+    }
+
+    .interactive-map-card:hover .map-overlay {
+      opacity: 1;
+    }
+
+    .map-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      width: 100%;
+    }
+
+    .map-stats .stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .map-stats .stat i {
+      color: var(--obelisk-blue);
+    }
+
+    .map-info {
+      padding: 1.5rem;
+    }
+
+    .map-description {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .map-features {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .feature {
+      background: var(--surface-2);
+      border: 1px solid var(--border-secondary);
+      border-radius: 12px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .map-actions {
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      border-top: 1px solid var(--border-secondary);
+    }
+
+    .map-actions .btn {
+      flex: 1;
+      padding: 0.875rem 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .map-details-panel {
+      border-top: 1px solid var(--border-secondary);
+      background: var(--surface-2);
+    }
+
+    .details-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-secondary);
+    }
+
+    .details-tab {
+      flex: 1;
+      padding: 1rem;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s var(--ease-fluid);
+    }
+
+    .details-tab.active {
+      color: var(--obelisk-blue);
+      border-bottom: 2px solid var(--obelisk-blue);
+      background: var(--surface-3);
+    }
+
+    .details-tab:hover {
+      color: var(--text-primary);
+      background: var(--surface-3);
+    }
+
+    .details-content {
+      padding: 1.5rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .regions-grid, .creatures-grid, .resources-grid, .caves-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .region-item, .creature-item, .resource-item, .cave-item {
+      background: var(--surface-1);
+      border: 1px solid var(--border-secondary);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      transition: all 0.3s var(--ease-fluid);
+      cursor: pointer;
+    }
+
+    .region-item:hover, .creature-item:hover, .resource-item:hover, .cave-item:hover {
+      border-color: var(--obelisk-blue);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .maps-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .maps-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .maps-controls select {
+      min-width: 150px;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    /* Enhanced Search Results */
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border-secondary);
+    }
+
+    .results-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .result-count {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .results-controls {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .btn-sm {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .enhanced-results-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .enhanced-search-result {
+      background: var(--surface-1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--border-secondary);
+      border-radius: 16px;
+      padding: 0;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s var(--ease-fluid);
+    }
+
+    .enhanced-search-result::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--obelisk-blue), var(--obelisk-green), var(--obelisk-red));
+      transform: scaleX(0);
+      transition: transform 0.3s var(--ease-fluid);
+    }
+
+    .enhanced-search-result:hover {
+      border-color: var(--obelisk-blue);
+      transform: translateY(-4px);
+      background: var(--surface-2);
+      box-shadow: var(--shadow-lg), var(--glow-blue);
+    }
+
+    .enhanced-search-result:hover::before {
+      transform: scaleX(1);
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-secondary);
+      gap: 1rem;
+    }
+
+    .result-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .result-main {
+      flex: 1;
+    }
+
+    .result-main h4 {
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0 0 0.5rem 0;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .result-type {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .result-type.creature {
+      background: linear-gradient(135deg, #ff6b35, #ff8e53);
+      color: white;
+    }
+
+    .result-type.map {
+      background: linear-gradient(135deg, var(--obelisk-blue), #00d4ff);
+      color: white;
+    }
+
+    .result-type.region {
+      background: linear-gradient(135deg, var(--obelisk-green), #32d74b);
+      color: white;
+    }
+
+    .result-type.resource {
+      background: linear-gradient(135deg, #af52de, #bf5af2);
+      color: white;
+    }
+
+    .result-type.cave {
+      background: linear-gradient(135deg, #8e8e93, #636366);
+      color: white;
+    }
+
+    .result-stats {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-badge {
+      padding: 0.25rem 0.5rem;
+      border-radius: 8px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-badge.tameable {
+      background: rgba(48, 209, 88, 0.2);
+      color: var(--obelisk-green);
+      border: 1px solid rgba(48, 209, 88, 0.3);
+    }
+
+    .stat-badge.rarity-common {
+      background: rgba(142, 142, 147, 0.2);
+      color: #8e8e93;
+      border: 1px solid rgba(142, 142, 147, 0.3);
+    }
+
+    .stat-badge.rarity-uncommon {
+      background: rgba(52, 199, 89, 0.2);
+      color: var(--obelisk-green);
+      border: 1px solid rgba(52, 199, 89, 0.3);
+    }
+
+    .stat-badge.rarity-rare {
+      background: rgba(0, 122, 255, 0.2);
+      color: var(--obelisk-blue);
+      border: 1px solid rgba(0, 122, 255, 0.3);
+    }
+
+    .stat-badge.rarity-legendary {
+      background: rgba(175, 82, 222, 0.2);
+      color: #af52de;
+      border: 1px solid rgba(175, 82, 222, 0.3);
+    }
+
+    .result-content {
+      padding: 1.5rem;
+    }
+
+    .result-description {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .result-locations {
+      margin-bottom: 1rem;
+    }
+
+    .result-locations h5 {
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .result-locations h5 i {
+      color: var(--obelisk-blue);
+    }
+
+    .location-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .location-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border-secondary);
+      border-radius: 8px;
+      padding: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s var(--ease-fluid);
+    }
+
+    .location-item:hover {
+      border-color: var(--obelisk-blue);
+      background: var(--surface-3);
+      transform: translateY(-1px);
+    }
+
+    .location-name {
+      display: block;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .location-map {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .coordinates {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+      font-family: monospace;
+    }
+
+    .result-properties {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .property {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem;
+      background: var(--surface-2);
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+
+    .property-key {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .property-value {
+      color: var(--text-primary);
+    }
+
+    .result-actions {
+      padding: 1rem 1.5rem;
+      display: flex;
+      gap: 0.75rem;
+      border-top: 1px solid var(--border-secondary);
+      background: var(--surface-2);
+    }
+
+    .action-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s var(--ease-fluid);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      color: white;
+    }
+
+    .action-btn.secondary {
+      background: var(--surface-3);
+      color: var(--text-primary);
+      border: 1px solid var(--border-primary);
+    }
+
+    .action-btn.tertiary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-secondary);
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .action-btn.primary:hover {
+      background: linear-gradient(135deg, var(--obelisk-green), var(--obelisk-blue));
+    }
+
+    .action-btn.secondary:hover {
+      background: var(--surface-1);
+      border-color: var(--obelisk-blue);
+    }
+
+    .action-btn.tertiary:hover {
+      color: var(--obelisk-blue);
+      border-color: var(--obelisk-blue);
+    }
+
+    /* Data Update Modal Styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s var(--ease-fluid);
+    }
+
+    .modal.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .modal:not(.hidden) {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .modal-content {
+      position: relative;
+      background: var(--surface-1);
+      border: 1px solid var(--border-secondary);
+      border-radius: 20px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-xl), var(--glow-blue);
+      animation: modalSlideIn 0.3s var(--ease-fluid);
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem;
+      border-bottom: 1px solid var(--border-secondary);
+    }
+
+    .modal-header h2 {
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: all 0.3s var(--ease-fluid);
+    }
+
+    .modal-close:hover {
+      color: var(--text-primary);
+      background: var(--surface-2);
+    }
+
+    .modal-body {
+      padding: 2rem;
+    }
+
+    .modal-body h3 {
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .data-sources {
+      margin-bottom: 2rem;
+    }
+
+    .source-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border-secondary);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s var(--ease-fluid);
+    }
+
+    .source-card:hover {
+      border-color: var(--obelisk-blue);
+      box-shadow: var(--shadow-md);
+    }
+
+    .source-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .source-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--obelisk-blue), var(--obelisk-green));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .source-icon.dododex {
+      background: linear-gradient(135deg, #ff6b35, #ff8e53);
+    }
+
+    .source-info {
+      flex: 1;
+    }
+
+    .source-info h4 {
+      margin: 0 0 0.5rem 0;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .source-info p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .source-status {
+      text-align: right;
+    }
+
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status-badge.ready {
+      background: rgba(48, 209, 88, 0.2);
+      color: var(--obelisk-green);
+      border: 1px solid rgba(48, 209, 88, 0.3);
+    }
+
+    .status-badge.updating {
+      background: rgba(0, 122, 255, 0.2);
+      color: var(--obelisk-blue);
+      border: 1px solid rgba(0, 122, 255, 0.3);
+    }
+
+    .status-badge.error {
+      background: rgba(255, 59, 48, 0.2);
+      color: var(--obelisk-red);
+      border: 1px solid rgba(255, 59, 48, 0.3);
+    }
+
+    .source-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: background 0.3s var(--ease-fluid);
+    }
+
+    .checkbox-container:hover {
+      background: var(--surface-3);
+    }
+
+    .checkbox-container input[type="checkbox"] {
+      display: none;
+    }
+
+    .checkmark {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border-primary);
+      border-radius: 4px;
+      position: relative;
+      transition: all 0.3s var(--ease-fluid);
+    }
+
+    .checkbox-container input[type="checkbox"]:checked + .checkmark {
+      background: var(--obelisk-blue);
+      border-color: var(--obelisk-blue);
+    }
+
+    .checkbox-container input[type="checkbox"]:checked + .checkmark::after {
+      content: '✓';
+      position: absolute;
+      top: -2px;
+      left: 2px;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .update-options {
+      margin-bottom: 2rem;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .update-progress {
+      margin-bottom: 2rem;
+    }
+
+    .progress-container {
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--surface-3);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--obelisk-blue), var(--obelisk-green));
+      width: 0%;
+      transition: width 0.3s var(--ease-fluid);
+    }
+
+    .progress-text {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .progress-details {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .progress-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem;
+      background: var(--surface-2);
+      border-radius: 8px;
+    }
+
+    .item-name {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .item-status {
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .item-status.pending {
+      background: rgba(142, 142, 147, 0.2);
+      color: #8e8e93;
+    }
+
+    .item-status.processing {
+      background: rgba(0, 122, 255, 0.2);
+      color: var(--obelisk-blue);
+    }
+
+    .item-status.completed {
+      background: rgba(48, 209, 88, 0.2);
+      color: var(--obelisk-green);
+    }
+
+    .item-status.failed {
+      background: rgba(255, 59, 48, 0.2);
+      color: var(--obelisk-red);
+    }
+
+    .update-log {
+      margin-bottom: 2rem;
+    }
+
+    .log-container {
+      background: var(--surface-3);
+      border-radius: 8px;
+      padding: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
+    .log-entry {
+      margin-bottom: 0.25rem;
+      color: var(--text-secondary);
+    }
+
+    .log-entry.info {
+      color: var(--obelisk-blue);
+    }
+
+    .log-entry.success {
+      color: var(--obelisk-green);
+    }
+
+    .log-entry.error {
+      color: var(--obelisk-red);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      padding: 2rem;
+      border-top: 1px solid var(--border-secondary);
+    }
+
+    /* Utility classes */
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .mb-1 { margin-bottom: 0.5rem; }
+    .mb-2 { margin-bottom: 1rem; }
+    .mb-3 { margin-bottom: 1.5rem; }
+    .mt-1 { margin-top: 0.5rem; }
+    .mt-2 { margin-top: 1rem; }
+    .p-2 { padding: 1rem; }
+    .hidden { display: none; }
+    .flex { display: flex; }
+    .justify-between { justify-content: space-between; }
+    .items-center { align-items: center; }
+    .gap-2 { gap: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Status Indicator -->
+    <div class="status-indicator">
+      <div class="status-dot"></div>
+      <span id="statusText">Connecting...</span>
+      <div class="theme-switcher">
+        <select id="themeSelector" aria-label="Theme selector">
+          <option value="dark">Obelisk Dark</option>
+          <option value="white">Authentic White</option>
+          <option value="grey-silver">Grey & Silver</option>
+          <option value="silver-white-black">Silver, White & Black</option>
+        </select>
+      </div>
+      <div class="sync-controls">
+        <button class="btn btn-secondary btn-sm" data-action="sync" title="Sync delta updates from ARK Wiki and Dododex">
+          <span class="btn-content">
+            <i class="fas fa-sync-alt"></i> Sync
+          </span>
+          <span class="btn-loading hidden">
+            <i class="fas fa-spinner fa-spin"></i> Syncing...
+          </span>
+        </button>
+        <button class="btn btn-primary btn-sm" data-action="update-db" title="Open database update center">
+          <span class="btn-content">
+            <i class="fas fa-database"></i> Update DB
+          </span>
+          <span class="btn-loading hidden">
+            <i class="fas fa-spinner fa-spin"></i> Loading...
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+      <h1><i class="fas fa-dragon"></i> ASA Service</h1>
+      <p>ARK: Survival Ascended - Complete Database & Tools</p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="search">
+        <i class="fas fa-search"></i> Search
+      </button>
+      <button class="nav-tab" data-tab="creatures">
+        <i class="fas fa-paw"></i> Creatures
+      </button>
+      <button class="nav-tab" data-tab="maps">
+        <i class="fas fa-map"></i> Maps
+      </button>
+      <button class="nav-tab" data-tab="taming">
+        <i class="fas fa-heart"></i> Taming
+      </button>
+      <button class="nav-tab" data-tab="regions">
+        <i class="fas fa-mountain"></i> Regions
+      </button>
+    </div>
+
+    <!-- Search Tab -->
+    <div class="tab-content active" id="searchTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-search"></i> Universal Search</h2>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="searchQuery">Search Query</label>
+            <input type="text" id="searchQuery" placeholder="Search creatures, maps, or content..." />
+          </div>
+          <div class="form-group">
+            <label for="searchType">Search Type</label>
+            <select id="searchType">
+              <option value="">All Types</option>
+              <option value="creature" selected>Creatures</option>
+              <option value="map">Maps</option>
+            </select>
+          </div>
+        </div>
+        
+        <button class="btn" data-action="search">
+          <i class="fas fa-search"></i> Search
+        </button>
+      </div>
+
+      <div id="searchResults" class="card hidden">
+        <div class="card-header">
+          <h3 class="card-title">Search Results</h3>
+        </div>
+        <div id="searchResultsContent"></div>
+      </div>
+    </div>
+
+    <!-- Creatures Tab -->
+    <div class="tab-content" id="creaturesTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-paw"></i> Creatures Database</h2>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="creatureFilter">Filter</label>
+            <select id="creatureFilter">
+              <option value="">All Creatures</option>
+              <option value="tameable">Tameable Only</option>
+              <option value="rideable">Rideable Only</option>
+              <option value="aggressive">Aggressive</option>
+              <option value="passive">Passive</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="creatureSort">Sort By</label>
+            <select id="creatureSort">
+              <option value="name">Name</option>
+              <option value="health">Health</option>
+              <option value="melee_damage">Damage</option>
+            </select>
+          </div>
+        </div>
+        
+        <button class="btn" data-action="load-creatures">
+          <i class="fas fa-sync"></i> Load Creatures
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid" id="creatureStats" style="display: none;">
+        <div class="stat-card">
+          <div class="stat-value" id="totalCreatures">0</div>
+          <div class="stat-label">Total Creatures</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="tameableCreatures">0</div>
+          <div class="stat-label">Tameable</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="rideableCreatures">0</div>
+          <div class="stat-label">Rideable</div>
+        </div>
+      </div>
+
+      <div id="creaturesResults" class="card hidden">
+        <div class="card-header">
+          <h3 class="card-title">Creatures</h3>
+        </div>
+        <div id="creaturesContent"></div>
+      </div>
+    </div>
+
+    <!-- Maps Tab -->
+    <div class="tab-content" id="mapsTab">
+      <!-- Interactive Maps Header -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-map-marked-alt"></i> Interactive Maps
+            <span class="subtitle">Google Maps-like experience for ARK</span>
+          </h2>
+        </div>
+        
+        <!-- Map Selection and Controls -->
+        <div class="maps-controls">
+          <div class="control-group">
+            <label for="mapSelector">Select Map:</label>
+            <select id="mapSelector" class="form-control">
+              <option value="">Choose a map...</option>
+            </select>
+          </div>
+          
+          <div class="control-group">
+            <label>Your Position:</label>
+            <div class="position-inputs">
+              <input type="number" id="userLatInput" placeholder="Latitude" step="0.1" class="form-control">
+              <input type="number" id="userLngInput" placeholder="Longitude" step="0.1" class="form-control">
+              <button class="btn btn-primary btn-sm" onclick="window.interactiveMaps.updateUserPosition()">
+                <i class="fas fa-crosshairs"></i> Set Position
+              </button>
+            </div>
+          </div>
+          
+          <div class="control-group">
+            <label for="searchRadius">Search Radius:</label>
+            <input type="range" id="searchRadius" min="1" max="50" value="10" class="range-input">
+            <span id="radiusValue">10 units</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Interactive Map Interface -->
+      <div class="interactive-maps-container">
+        <!-- Map Canvas Area -->
+        <div class="map-section">
+          <div class="map-toolbar">
+            <div class="map-controls">
+              <button class="btn btn-sm zoom-in-btn" title="Zoom In">
+                <i class="fas fa-plus"></i>
+              </button>
+              <button class="btn btn-sm zoom-out-btn" title="Zoom Out">
+                <i class="fas fa-minus"></i>
+              </button>
+              <button class="btn btn-sm" onclick="window.interactiveMaps.resetView()" title="Reset View">
+                <i class="fas fa-home"></i>
+              </button>
+            </div>
+            
+            <div class="map-info" id="mapInfo">
+              <span class="text-muted">Select a map to get started</span>
+            </div>
+            
+            <div class="map-actions">
+              <button class="btn btn-secondary btn-sm add-user-location-btn">
+                <i class="fas fa-plus-circle"></i> Add Location
+              </button>
+              <button class="btn btn-primary btn-sm location-search-btn">
+                <i class="fas fa-search"></i> Search Nearby
+              </button>
+            </div>
+          </div>
+          
+          <!-- Interactive Map Canvas -->
+          <div class="map-canvas-container" id="mapCanvas">
+            <div class="map-placeholder">
+              <i class="fas fa-map-marked-alt"></i>
+              <h3>Interactive Map</h3>
+              <p>Select a map from the dropdown above to start exploring</p>
+            </div>
+          </div>
+          
+          <!-- Map Legend -->
+          <div class="map-legend">
+            <h5><i class="fas fa-list"></i> Legend</h5>
+            <div class="legend-items">
+              <div class="legend-item">
+                <span class="legend-marker resource">⛏️</span>
+                <span>Resources</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-marker creature">🦕</span>
+                <span>Creatures</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-marker cave">🕳️</span>
+                <span>Caves</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-marker landmark">🏛️</span>
+                <span>Landmarks</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-marker user-location">🏠</span>
+                <span>Your Locations</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar with Controls and Information -->
+        <div class="map-sidebar">
+          <!-- Category Filters -->
+          <div class="sidebar-section">
+            <h4><i class="fas fa-filter"></i> Show Categories</h4>
+            <div id="categoryToggles" class="category-toggles">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <!-- Location Details -->
+          <div class="sidebar-section">
+            <h4><i class="fas fa-info-circle"></i> Location Details</h4>
+            <div id="locationDetails" class="location-details">
+              <p class="text-muted">Click on a location to see details</p>
+            </div>
+          </div>
+
+          <!-- Nearby Locations -->
+          <div class="sidebar-section">
+            <h4><i class="fas fa-compass"></i> Nearby Locations</h4>
+            <div id="nearbyLocationsList" class="nearby-locations">
+              <p class="text-muted">Set your position to find nearby locations</p>
+            </div>
+          </div>
+
+          <!-- Route Information -->
+          <div class="sidebar-section">
+            <h4><i class="fas fa-route"></i> Route Planner</h4>
+            <div id="routeInfo" class="route-info">
+              <p class="text-muted">Select a destination to calculate route</p>
+            </div>
+          </div>
+
+          <!-- Locations List -->
+          <div class="sidebar-section">
+            <h4><i class="fas fa-list-ul"></i> All Locations</h4>
+            <div id="locationsList" class="locations-list">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="maps-stats">
+        <div class="stat-card">
+          <div class="stat-icon resources">
+            <i class="fas fa-gem"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="resourceCount">0</h3>
+            <p>Resource Nodes</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon creatures">
+            <i class="fas fa-dragon"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="creatureCount">0</h3>
+            <p>Creature Spawns</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon caves">
+            <i class="fas fa-mountain"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="caveCount">0</h3>
+            <p>Caves & Dungeons</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon landmarks">
+            <i class="fas fa-landmark"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="landmarkCount">0</h3>
+            <p>Landmarks</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Maps Results Container -->
+      <div id="mapsResults" class="card hidden">
+        <div class="card-header">
+          <h3 class="card-title">Available Maps</h3>
+        </div>
+        <div id="mapsContent"></div>
+      </div>
+    </div>
+
+    <!-- Taming Tab -->
+    <div class="tab-content" id="tamingTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-heart"></i> Taming Calculator</h2>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="tamingCreature">Creature</label>
+            <select id="tamingCreature">
+              <option value="">Select Creature...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="creatureLevel">Level</label>
+            <input type="number" id="creatureLevel" min="1" max="150" placeholder="Creature level..." />
+          </div>
+        </div>
+        
+        <button class="btn" data-action="calculate-taming">
+          <i class="fas fa-calculator"></i> Calculate Taming
+        </button>
+      </div>
+
+      <div id="tamingResults" class="card hidden">
+        <div class="card-header">
+          <h3 class="card-title">Taming Information</h3>
+        </div>
+        <div id="tamingResultsContent"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">All Tameable Creatures</h3>
+        </div>
+        <button class="btn btn-secondary" data-action="load-tameable">
+          <i class="fas fa-list"></i> Load All Tameable
+        </button>
+        <div id="tameableList" class="mt-2"></div>
+      </div>
+    </div>
+
+    <!-- Regions Tab -->
+    <div class="tab-content" id="regionsTab">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-mountain"></i> Map Regions</h2>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="regionMap">Select Map</label>
+            <select id="regionMap">
+              <option value="">Choose Map...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="regionBiome">Biome Type</label>
+            <select id="regionBiome">
+              <option value="">All Biomes</option>
+              <option value="tropical">Tropical</option>
+              <option value="temperate">Temperate</option>
+              <option value="snow">Snow</option>
+              <option value="desert">Desert</option>
+              <option value="volcanic">Volcanic</option>
+            </select>
+          </div>
+        </div>
+        
+        <button class="btn" data-action="load-regions">
+          <i class="fas fa-sync"></i> Load Regions
+        </button>
+      </div>
+
+      <div id="regionsResults" class="card hidden">
+        <div class="card-header">
+          <h3 class="card-title">Map Regions</h3>
+        </div>
+        <div id="regionsContent"></div>
+      </div>
+    </div>
+
+    <!-- Loading indicator -->
+    <div id="loadingIndicator" class="loading hidden">
+      <div class="spinner"></div>
+      <span>Loading...</span>
+    </div>
+
+    <!-- Alert container -->
+    <div id="alertContainer"></div>
+
+    <!-- Data Update Modal -->
+    <div id="dataUpdateModal" class="modal hidden">
+      <div class="modal-overlay" data-action="close-modal"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2><i class="fas fa-database"></i> Update Database with Official Data</h2>
+          <button class="modal-close" data-action="close-modal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="data-sources">
+            <h3>Available Data Sources</h3>
+            
+            <div class="source-card">
+              <div class="source-header">
+                <div class="source-icon">
+                  <i class="fas fa-globe"></i>
+                </div>
+                <div class="source-info">
+                  <h4>ARK Wiki</h4>
+                  <p>Official ARK: Survival Ascended Wiki data including creatures, maps, and items</p>
+                </div>
+                <div class="source-status" id="arkWikiStatus">
+                  <span class="status-badge ready">Ready</span>
+                </div>
+              </div>
+              <div class="source-actions">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="updateCreatures" checked>
+                  <span class="checkmark"></span>
+                  Creatures & Taming Data
+                </label>
+                <label class="checkbox-container">
+                  <input type="checkbox" id="updateMaps" checked>
+                  <span class="checkmark"></span>
+                  Maps & Regions
+                </label>
+                <label class="checkbox-container">
+                  <input type="checkbox" id="updateItems">
+                  <span class="checkmark"></span>
+                  Items & Resources
+                </label>
+              </div>
+            </div>
+
+            <div class="source-card">
+              <div class="source-header">
+                <div class="source-icon dododex">
+                  <i class="fas fa-dragon"></i>
+                </div>
+                <div class="source-info">
+                  <h4>Dododex</h4>
+                  <p>Comprehensive taming calculator data and creature statistics</p>
+                </div>
+                <div class="source-status" id="dododexStatus">
+                  <span class="status-badge ready">Ready</span>
+                </div>
+              </div>
+              <div class="source-actions">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="updateTaming" checked>
+                  <span class="checkmark"></span>
+                  Taming Calculations
+                </label>
+                <label class="checkbox-container">
+                  <input type="checkbox" id="updateStats">
+                  <span class="checkmark"></span>
+                  Creature Statistics
+                </label>
+                <label class="checkbox-container">
+                  <input type="checkbox" id="updateFood">
+                  <span class="checkmark"></span>
+                  Food & Kibble Data
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="update-options">
+            <h3>Update Options</h3>
+            <div class="options-grid">
+              <label class="checkbox-container">
+                <input type="checkbox" id="backupBefore" checked>
+                <span class="checkmark"></span>
+                Create backup before update
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox" id="incrementalUpdate">
+                <span class="checkmark"></span>
+                Incremental update (only new/changed data)
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox" id="validateData" checked>
+                <span class="checkmark"></span>
+                Validate data integrity
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox" id="notifyCompletion" checked>
+                <span class="checkmark"></span>
+                Send notification when complete
+              </label>
+            </div>
+          </div>
+
+          <div class="update-progress hidden" id="updateProgress">
+            <h3>Update Progress</h3>
+            <div class="progress-container">
+              <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <div class="progress-text" id="progressText">Preparing update...</div>
+            </div>
+            <div class="progress-details" id="progressDetails">
+              <div class="progress-item">
+                <span class="item-name">ARK Wiki Creatures</span>
+                <span class="item-status pending" id="status-ark-creatures">Pending</span>
+              </div>
+              <div class="progress-item">
+                <span class="item-name">ARK Wiki Maps</span>
+                <span class="item-status pending" id="status-ark-maps">Pending</span>
+              </div>
+              <div class="progress-item">
+                <span class="item-name">Dododex Taming</span>
+                <span class="item-status pending" id="status-dododex-taming">Pending</span>
+              </div>
+              <div class="progress-item">
+                <span class="item-name">Data Validation</span>
+                <span class="item-status pending" id="status-validation">Pending</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="update-log hidden" id="updateLog">
+            <h3>Update Log</h3>
+            <div class="log-container" id="logContainer">
+              <!-- Log entries will be added here -->
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-action="close-modal">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+          <button class="btn btn-primary" id="startUpdateBtn" data-action="start-update">
+            <i class="fas fa-download"></i> Start Update
+          </button>
+          <button class="btn btn-success hidden" id="completeUpdateBtn" data-action="close-modal">
+            <i class="fas fa-check"></i> Complete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- External Scripts -->
+  <script src="js/app.js"></script>
+
+  <script>
+    // Initialize the application when DOM is loaded
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        console.log('🚀 Initializing ASA Service...');
+        
+        // Create the application instance (ASAService is defined in app.js)
+        const app = new ASAService();
+        window.app = app;
+        console.log('✅ ASAService instance created and assigned to window.app');
+
+        // Initialize the application
+        try {
+          await app.init();
+          console.log('✅ ASAService initialized successfully');
+        } catch (error) {
+          console.error('❌ ASAService initialization failed:', error);
+          console.log('🔄 Continuing with limited functionality...');
+          app.showAlert('Failed to initialize application', 'error');
+        }
+      } catch (error) {
+        console.error('❌ Critical error during setup:', error);
+        alert('Critical error: ' + error.message);
+      }
+
+      console.log('✅ Application initialization complete!');
+
+      // Set up simplified global functions that delegate to the external ASAService
+      window.performSearch = () => window.app?.performSearch?.() || console.error('Search not available');
+      window.loadCreatures = () => window.app?.loadCreatures?.() || console.error('Load creatures not available');
+      window.loadMaps = () => window.app?.loadMaps?.() || console.error('Load maps not available');
+      window.calculateTaming = () => window.app?.calculateTaming?.() || console.error('Calculate taming not available');
+      window.loadTameableCreatures = () => window.app?.loadTameableCreatures?.() || console.error('Load tameable creatures not available');
+      window.loadRegions = () => window.app?.loadRegions?.() || console.error('Load regions not available');
+      window.syncAllData = () => window.app?.syncAllData?.() || console.error('Sync not available');
+      window.openDataUpdateModal = () => window.app?.openDataUpdateModal?.() || console.error('Update modal not available');
+      window.closeDataUpdateModal = () => window.app?.closeDataUpdateModal?.() || console.error('Close modal not available');
+      window.startDataUpdate = () => window.app?.startDataUpdate?.() || console.error('Start update not available');
+
+      // Utility functions
+      window.viewDetails = (type, slug) => window.app?.viewDetails?.(type, slug) || console.error('View details not available');
+      window.selectCreatureForTaming = (slug) => window.app?.selectCreatureForTaming?.(slug) || console.error('Select creature not available');
+      window.showMapDetails = (mapName) => window.app?.showMapDetails?.(mapName) || console.error('Show map details not available');
+      window.showMapRegions = (mapName) => window.app?.showMapRegions?.(mapName) || console.error('Show map regions not available');
+      window.showDetailTab = (mapName, tabType) => window.app?.showDetailTab?.(mapName, tabType) || console.error('Show detail tab not available');
+      window.toggleAllMapDetails = () => window.app?.toggleAllMapDetails?.() || console.error('Toggle map details not available');
+      window.sortMaps = () => window.app?.sortMaps?.() || console.error('Sort maps not available');
+      window.sortSearchResults = () => window.app?.sortSearchResults?.() || console.error('Sort search results not available');
+      window.exportSearchResults = () => window.app?.exportSearchResults?.() || console.error('Export search results not available');
+      window.showDetailedView = (type, name) => window.app?.showDetailedView?.(type, name) || console.error('Show detailed view not available');
+      window.addToTamingPlanner = (creatureName) => window.app?.addToTamingPlanner?.(creatureName) || console.error('Add to taming planner not available');
+      window.exploreMap = (mapName) => window.app?.exploreMap?.(mapName) || console.error('Explore map not available');
+      window.addToFavorites = (type, name) => window.app?.addToFavorites?.(type, name) || console.error('Add to favorites not available');
+      window.showLocationDetails = (locationName, mapName) => window.app?.showLocationDetails?.(locationName, mapName) || console.error('Show location details not available');
+
+      // Placeholder functions for missing handlers
+      window.showRegionDetails = (regionName, mapName) => window.app?.showAlert?.(`Region Details: ${regionName} on ${mapName}`, 'info') || console.log(`Region: ${regionName} on ${mapName}`);
+      window.showCreatureDetails = (creatureName) => window.app?.showAlert?.(`Creature Details: ${creatureName}`, 'info') || console.log(`Creature: ${creatureName}`);
+      window.showResourceDetails = (resourceName) => window.app?.showAlert?.(`Resource Details: ${resourceName}`, 'info') || console.log(`Resource: ${resourceName}`);
+      window.showCaveDetails = (caveName) => window.app?.showAlert?.(`Cave Details: ${caveName}`, 'info') || console.log(`Cave: ${caveName}`);
+
+      console.log('✅ Global functions set up successfully');
+    });
+  </script>
+</body>
+</html>

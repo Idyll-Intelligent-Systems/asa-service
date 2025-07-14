@@ -1,72 +1,139 @@
 # ASA Service
 
-Ark Survival Ascended server information service providing maps, creatures, and coordinate data.
+ARK: Survival Ascended complete database API with integrated frontend providing creatures, maps, taming calculator, regions, and search functionality.
 
 ## 🚀 Quick Start
 
-### Development Setup
-```bash
-# Clone and setup development environment
-npm run setup
+### Development Setup (Windows)
 
-# Or manual setup:
+**Automated Setup (Recommended):**
+```powershell
+# Run the PowerShell development setup script
+.\run-dev.ps1
+```
+
+This will automatically:
+- Check prerequisites (Node.js, PostgreSQL)
+- Install dependencies
+- Create and initialize PostgreSQL database with sample data
+- Start the application with hot reload
+
+**Manual Setup:**
+```bash
+# Install dependencies
 npm install
-npm run db:migrate
-npm run db:seed
+
+# Start development server (mock mode)
+npm run dev:mock
+
+# Or start with database (requires PostgreSQL)
 npm run dev
 ```
 
+**Alternative (Batch Script):**
+```cmd
+# For users who prefer batch files
+start-dev.bat
+```
+
+### Prerequisites
+- **Node.js** v16+ - [Download](https://nodejs.org/)
+- **PostgreSQL** v12+ - [Download](https://www.postgresql.org/download/windows/) (optional for mock mode)
+
 ### Production Setup
 ```bash
+# Install production dependencies
 npm install --production
-npm run db:migrate
+
+# Start production server (with mock data)
 npm start
+
+# Or start with database (if PostgreSQL is available)
+set DATABASE_URL=postgresql://user:password@localhost:5432/asa_service && npm start
+```
+
+### Access the Application
+- **Frontend UI**: http://localhost:3000
+- **API Documentation**: http://localhost:3000/api/docs  
+- **Health Check**: http://localhost:3000/api/health
+
+### Development Scripts
+```bash
+# Start development server with auto-reload
+npm run dev
+
+# Test all features quickly
+npm run demo
+
+# Check service health
+npm run health
 ```
 
 ## 📁 Project Structure
 
 ```
-src/
-├── backend/          # Application server code
-│   ├── app.js       # Main application entry point
-│   ├── config/      # Configuration management
-│   ├── middleware/  # Express middleware
-│   ├── routes/      # API route definitions
-│   ├── services/    # Business logic services
-│   └── utils/       # Utility functions
-├── frontend/        # Frontend static assets
-├── database/        # Database related files
-│   ├── schema.sql   # Complete database schema
-│   ├── migrations/  # Database migration files
-│   └── seeds/       # Sample data for development
-tests/
-├── unit/           # Unit tests
-├── integration/    # API integration tests
-└── e2e/           # End-to-end tests
-scripts/           # Utility scripts
-docs/             # Documentation
-docker/           # Docker configurations
+asa-service/
+├── src/
+│   ├── routes/           # API route handlers
+│   │   ├── creatures.js  # Creature data and filtering
+│   │   ├── maps.js       # Map information and details
+│   │   ├── search.js     # Cross-entity search functionality
+│   │   ├── taming.js     # Taming calculator and methods
+│   │   ├── regions.js    # Map regions and biomes
+│   │   ├── health.js     # System health monitoring
+│   │   └── admin.js      # Administrative endpoints
+│   └── frontend/         # Static web interface
+│       ├── index.html    # Main UI with tabs and search
+│       ├── images/       # Map images and assets
+│       └── favicon.ico   # Site favicon
+├── tests/               # Test suites
+│   ├── unit/           # Unit tests for components
+│   ├── integration/    # API integration tests
+│   └── e2e/           # End-to-end browser tests
+├── app.js              # Main application server
+├── package.json        # Dependencies and scripts
+├── nodemon.json        # Development server configuration
+├── README.md           # This documentation
+└── .gitignore          # Git ignore rules
 ```
 
 ## 🔗 API Endpoints
 
 ### Core Endpoints
-- `GET /api/health` - Service health check
-- `GET /api/maps` - List all maps with details
-- `GET /api/maps/:mapName` - Get specific map information
-- `GET /api/creatures` - List all creatures with filtering
-- `GET /api/creatures/:id` - Get specific creature details
-- `GET /api/search` - Advanced search across all content
+- `GET /` - Application information and status
+- `GET /api/health` - Detailed service health check
+- `GET /api/docs` - Complete API documentation
 
-### Map-Specific Endpoints
-- `GET /api/maps/:mapName/creatures` - Creatures available on specific map
-- `GET /api/maps/:mapName/resources` - Resources available on specific map
-- `GET /api/maps/:mapName/coordinates` - Notable coordinates for map
+### Search & Discovery
+- `GET /api/search?q=term` - Search across creatures, maps, and content
+- `GET /api/search?q=term&type=creature` - Search creatures only
+- `GET /api/search?q=term&type=map` - Search maps only
 
-### Advanced Search
-- `GET /api/search/creatures?q=term` - Search creatures by name/type
-- `GET /api/search/locations?q=term` - Search locations and coordinates
-- `GET /api/search/all?q=term` - Global search across all content
+### Creatures
+- `GET /api/creatures` - List all creatures with pagination
+- `GET /api/creatures?tameable=true` - Filter tameable creatures
+- `GET /api/creatures?page=1&limit=20` - Paginated results
+- `GET /api/creatures/:slug` - Get specific creature details
+
+### Maps
+- `GET /api/maps` - List all available maps
+- `GET /api/maps?type=official` - Filter by map type
+- `GET /api/maps/:slug` - Get specific map information
+- `GET /api/maps/:slug/creatures` - Creatures available on map
+
+### Taming System
+- `GET /api/taming` - List all tameable creatures
+- `GET /api/taming/:slug` - Get taming info for specific creature
+- `POST /api/taming/calculate` - Taming calculator (levels, food, time)
+
+### Regions & Biomes
+- `GET /api/regions` - List all map regions
+- `GET /api/regions/:id` - Get specific region details
+- `GET /api/regions?map=the-island` - Filter by map
+
+### Administrative
+- `GET /api/admin/stats` - System statistics
+- `POST /api/admin/refresh` - Refresh cached data
 
 ## 🛠️ Development
 
@@ -74,432 +141,479 @@ docker/           # Docker configurations
 
 ```bash
 # Development
-npm run dev              # Start development server with hot reload
-npm run setup           # Complete development environment setup
-
-# Database
-npm run db:migrate      # Run database migrations
-npm run db:seed         # Populate database with sample data
-npm run db:reset        # Reset database (migrate + seed)
+npm run dev              # Start with nodemon (auto-restart on changes)
+npm start               # Start production server
+npm run start:fresh     # Start with fresh database (drops existing)
+npm run start:quick     # Start without data sync (faster startup)
 
 # Testing
 npm test               # Run all tests
 npm run test:unit      # Run unit tests only
-npm run test:integration # Run integration tests
-npm run test:e2e       # Run end-to-end tests
+npm run test:integration # Run API integration tests
+npm run test:e2e       # Run end-to-end browser tests
 npm run test:watch     # Run tests in watch mode
+npm run test:coverage  # Generate test coverage report
+npm run test:all       # Run complete test suite
 
-# Maintenance
-npm run cleanup        # Clean up old repository files
-npm run lint          # Run ESLint
+# Code Quality
+npm run lint          # Run ESLint code analysis
 npm run lint:fix      # Fix ESLint issues automatically
+npm run clean         # Clean up temporary files
+
+# Utilities
+npm run health        # Check if service is running
+npm run docs          # Open API documentation
+npm run docker:build  # Build Docker image
+npm run docker:run    # Run in Docker container
 ```
+
+### Development Environment
+
+The application works in multiple modes:
+
+#### 1. Mock Data Mode (Default)
+```bash
+# No database required - uses built-in mock data
+npm run dev
+```
+- ✅ All features work with sample data
+- ✅ Perfect for frontend development
+- ✅ No setup required
+
+#### 2. Database Mode
+```bash
+# With PostgreSQL database
+set DATABASE_URL=postgresql://user:password@localhost:5432/asa_service
+npm start
+```
+- ✅ Full data persistence
+- ✅ Real wiki data integration
+- ✅ Production-ready
+
+#### 3. Quick Start Mode
+```bash
+# Skip data synchronization for faster startup
+npm run start:quick
+```
+- ✅ Faster development cycles
+- ✅ Uses cached data
 
 ### Environment Configuration
 
-Create a `.env` file in the root directory:
+Create a `.env` file in the root directory (optional):
 
 ```env
-# Database Configuration
+# Database Configuration (optional)
 DATABASE_URL=postgresql://postgres:password@localhost:5432/asa_service
-TEST_DATABASE_URL=postgresql://postgres:password@localhost:5432/asa_service_test
 
 # Server Configuration
 PORT=3000
 NODE_ENV=development
 
-# Security
+# Development Options
+SKIP_DATABASE=true          # Use mock data instead of database
+SKIP_DATA_SYNC=true         # Skip wiki data synchronization
+DROP_EXISTING_DB=false      # Reset database on startup
+
+# Security (for production)
 JWT_SECRET=your-super-secret-jwt-key-change-in-production
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
 
-# CORS Configuration
-CORS_ORIGIN=http://localhost:3000
+# External APIs (optional)
+DODODEX_API_ENABLED=true    # Enable DodoDex integration
+WIKI_UPDATE_INTERVAL=6      # Hours between wiki updates
+```
+
+## 🌐 Frontend Interface
+
+### Modern UI Features
+- **🎨 Modern Design**: Clean, responsive interface with ARK-themed styling
+- **📱 Mobile-Friendly**: Works perfectly on desktop, tablet, and mobile
+- **🔍 Advanced Search**: Real-time search across all content types
+- **📊 Data Browser**: Browse creatures, maps, and regions with filtering
+- **🧮 Taming Calculator**: Calculate taming requirements and times
+- **⚡ Live Updates**: Real-time status and connection monitoring
+- **🎯 Interactive Maps**: Visual map exploration (when available)
+
+### UI Components
+1. **Search Tab**: Universal search across all content
+2. **Creatures Tab**: Browse and filter creature database
+3. **Maps Tab**: Explore available ARK maps
+4. **Taming Tab**: Interactive taming calculator
+5. **Regions Tab**: Discover map regions and biomes
+
+### Usage
+```bash
+# Start the application
+npm run dev
+
+# Open your browser to:
+http://localhost:3000
 ```
 
 ## 🧪 Testing
 
-The project includes comprehensive testing:
+The project includes comprehensive testing across all layers:
 
-- **Unit Tests**: Individual component testing
-- **Integration Tests**: API endpoint testing with real database
-- **E2E Tests**: Full application stack testing with browser automation
+### Test Categories
+- **Unit Tests**: Individual component and function testing
+- **Integration Tests**: API endpoint testing with mock data
+- **E2E Tests**: Full application testing with browser automation
+- **Performance Tests**: Load and stress testing
 
 ### Running Tests
 
 ```bash
-# Run all tests
+# Quick test (recommended for development)
 npm test
 
-# Run specific test suites
-npm run test:unit
-npm run test:integration
-npm run test:e2e
+# Comprehensive testing
+npm run test:all
 
-# Run tests in watch mode during development
-npm run test:watch
+# Specific test suites
+npm run test:unit           # Fast unit tests
+npm run test:integration    # API integration tests  
+npm run test:e2e           # Browser automation tests
+
+# Development testing
+npm run test:watch         # Auto-run tests on file changes
+npm run test:coverage      # Generate coverage reports
 ```
+
+### Test Features
+- ✅ **No Database Required**: Tests use mock data by default
+- ✅ **Fast Execution**: Unit tests complete in seconds
+- ✅ **CI/CD Ready**: Designed for automated testing pipelines
+- ✅ **Browser Testing**: Real browser testing with Puppeteer
+- ✅ **API Testing**: Complete endpoint coverage
 
 ## 🗃️ Database
 
 ### Schema Overview
 
-The database includes comprehensive tables for:
-- **Maps**: Official ARK maps with metadata
-- **Creatures**: All creatures with stats and behaviors
-- **Resources**: Materials and items with spawn information
-- **Locations**: Notable coordinates and POIs
-- **Cave Systems**: Cave networks with connections
-- **Biomes**: Environmental regions with characteristics
+The database supports comprehensive ARK: Survival Ascended data:
 
-### Migration System
+```sql
+-- Core Tables
+creatures          # All creatures with stats, behavior, and attributes
+maps              # Official and modded maps with metadata  
+map_regions       # Biomes and regions within maps
+taming_methods    # Taming information and requirements
+spawn_locations   # Creature spawn points and coordinates
+resources         # Materials, items, and resource nodes
 
-Database changes are managed through versioned migrations:
-
-```bash
-# Run pending migrations
-npm run db:migrate
-
-# Reset database to clean state
-npm run db:reset
+-- Relationship Tables
+creature_spawns   # Many-to-many: creatures ↔ maps
+map_resources     # Many-to-many: maps ↔ resources
+region_creatures  # Many-to-many: regions ↔ creatures
 ```
+
+### Database Modes
+
+#### 1. Automatic Setup (Recommended)
+```bash
+# Database tables created automatically
+npm start
+```
+- ✅ Auto-creates tables and indexes
+- ✅ Handles schema migrations
+- ✅ Populates with wiki data
+
+#### 2. Manual Setup
+```sql
+-- Connect to PostgreSQL
+psql -U postgres
+
+-- Create database
+CREATE DATABASE asa_service;
+
+-- Run initialization
+\i src/database/schema/complete_schema.sql
+```
+
+#### 3. Mock Data Mode (Development)
+```bash
+# No database required
+set SKIP_DATABASE=true
+npm run dev
+```
+- ✅ Works immediately without setup
+- ✅ Full feature testing with sample data
 
 ## 📚 API Documentation
 
-### Response Formats
+### Response Format
 
-All API responses follow a consistent format:
+All API responses follow a consistent structure:
 
 ```json
 {
   "success": true,
-  "data": { ... },
-  "meta": {
-    "timestamp": "2024-01-01T00:00:00Z",
-    "version": "1.0.0"
-  }
+  "data": {
+    "results": [...],
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 150,
+      "pages": 8
+    }
+  },
+  "message": "Using mock data - database not connected"
 }
 ```
 
 ### Error Handling
 
-Errors are returned with appropriate HTTP status codes and detailed messages:
+Errors include detailed information for debugging:
 
 ```json
 {
   "success": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Invalid map name provided",
-    "details": { ... }
-  }
+  "error": "Search query parameter 'q' is required",
+  "code": "VALIDATION_ERROR",
+  "timestamp": "2025-07-14T00:00:00Z"
 }
 ```
 
-### Rate Limiting
+### Example API Calls
 
-- Default: 100 requests per 15 minutes per IP
-- Configurable via environment variables
-- Proper HTTP headers included in responses
+```bash
+# Search for creatures
+curl "http://localhost:3000/api/search?q=rex"
+
+# Get all tameable creatures  
+curl "http://localhost:3000/api/creatures?tameable=true"
+
+# Get taming info for Rex
+curl "http://localhost:3000/api/taming/rex"
+
+# Get regions on The Island
+curl "http://localhost:3000/api/regions?map=the-island"
+
+# Calculate taming requirements
+curl -X POST "http://localhost:3000/api/taming/calculate" \
+  -H "Content-Type: application/json" \
+  -d '{"creature_id": 1, "level": 50, "food": "Prime Meat"}'
+```
+
+### Rate Limiting & Security
+
+- **Rate Limiting**: 100 requests per 15 minutes per IP
+- **CORS**: Configurable origin restrictions
+- **Helmet**: Security headers automatically applied
+- **Compression**: Gzip compression for all responses
 
 ## 🚢 Deployment
+
+### Quick Deployment (Recommended)
+
+```bash
+# 1. Clone and install
+git clone https://github.com/Idyll-Intelligent-Systems/asa-service.git
+cd asa-service
+npm install
+
+# 2. Start immediately (no database required)
+npm start
+
+# 3. Access at http://localhost:3000
+```
 
 ### Docker Deployment
 
 ```bash
-# Build application image
-docker build -t asa-service .
+# Build image
+npm run docker:build
 
-# Run with docker-compose
+# Run container
+npm run docker:run
+
+# Or use docker-compose
 docker-compose up -d
 ```
 
-### Manual Deployment
+### Production Deployment
 
-1. Set production environment variables
-2. Install dependencies: `npm install --production`
-3. Run migrations: `npm run db:migrate`
-4. Start application: `npm start`
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Make your changes following the established patterns
-4. Add tests for new functionality
-5. Run the test suite: `npm test`
-6. Commit your changes: `git commit -m 'Add amazing feature'`
-7. Push to the branch: `git push origin feature/amazing-feature`
-8. Open a Pull Request
-
-### Code Style
-
-- ESLint configuration enforces consistent code style
-- Run `npm run lint:fix` to automatically fix style issues
-- Follow existing patterns for new features
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-{
-  "map": "Ragnarok",
-  "type": "resource",
-  "lat": 50.0,
-  "lon": 50.0
-}
-```
-
-#### Data Browser
 ```bash
-# Get all locations with filtering
-GET /locations?map=Ragnarok&type=resource&name=metal&limit=50&offset=0
+# 1. Install production dependencies
+npm install --production
 
-# Response includes pagination info
-{
-  "data": [...],
-  "pagination": {
-    "total": 150,
-    "limit": 50,
-    "offset": 0,
-    "has_more": true
-  }
-}
+# 2. Set environment variables
+export NODE_ENV=production
+export DATABASE_URL=postgresql://user:pass@localhost:5432/asa_service
+
+# 3. Start with process manager
+npm start
+
+# Or with PM2
+pm2 start app.js --name "asa-service"
 ```
 
-#### Wiki Integration
+### Environment-Specific Deployment
+
+#### Development
 ```bash
-# Update from official wiki
-POST /wiki_update
-{ "map": "Ragnarok" }  # or { "map": "all" }
-
-# Check wiki update status
-GET /wiki_status
+set NODE_ENV=development
+set SKIP_DATABASE=true
+npm run dev
 ```
 
-#### System Management
+#### Staging  
 ```bash
-# System status
-GET /status
-
-# Available maps
-GET /maps
-
-# Available types  
-GET /types
-
-# Export map data
-GET /export/Ragnarok
+set NODE_ENV=staging
+set DATABASE_URL=postgresql://user:pass@staging-db:5432/asa_service
+npm start
 ```
 
-### CRUD Operations
+#### Production
 ```bash
-# Add location
-POST /locations
-{
-  "map": "Ragnarok",
-  "type": "resource",
-  "name": "Metal Node",
-  "lat": 45.5,
-  "lon": 30.2
-}
-
-# Delete location (requires database)
-DELETE /locations/123?map=Ragnarok&type=resource
+set NODE_ENV=production
+set DATABASE_URL=postgresql://user:pass@prod-db:5432/asa_service
+npm start
 ```
 
-## 🗄️ Database Integration
+## 🔧 Features
 
-### PostgreSQL Setup
-```sql
--- Create database
-CREATE DATABASE asa_maps;
+### ✅ Currently Working
+- **🌐 Frontend Interface**: Complete web UI with all tabs functional
+- **🔍 Universal Search**: Search across creatures, maps, and regions
+- **🦕 Creature Database**: Browse all creatures with filtering and details
+- **🗺️ Map Information**: Complete map data with descriptions and metadata
+- **🎯 Taming Calculator**: Calculate taming requirements and methods
+- **🌍 Region Explorer**: Browse map regions and biomes
+- **📊 Health Monitoring**: Real-time service status and metrics
+- **📱 Responsive Design**: Works on desktop, tablet, and mobile
+- **⚡ Mock Data Mode**: Full functionality without database setup
+- **🔄 Auto-Fallback**: Graceful degradation when database unavailable
 
--- Run initialization script
-\i init-db.sql
-```
+### 🚧 Database Integration
+- **✅ Schema Ready**: Complete database schema available
+- **✅ Migration System**: Automatic table creation and updates  
+- **✅ Wiki Integration**: Automatic data sync from ARK Wiki (when connected)
+- **🔄 Connection Handling**: Automatic reconnection and error recovery
 
-### Environment Variables
-```bash
-# Database Configuration
-PGHOST=localhost
-PGPORT=5432
-PGUSER=postgres
-PGPASSWORD=postgres
-PGDATABASE=asa_maps
-
-# Service Configuration
-PORT=4000
-NODE_ENV=production
-AUTO_WIKI_UPDATE=true
-```
-
-### Automatic Features
-- **Table Creation**: Tables created automatically when needed
-- **Schema Evolution**: Missing columns added automatically
-- **Performance Indexes**: Automatically created for optimal performance
-- **Connection Monitoring**: Auto-reconnection every 30 seconds
-
-## 🌐 Frontend Interface
-
-### Modern UI Features
-- **Responsive Design**: Works on desktop, tablet, and mobile
-- **Real-time Status**: Live database connection status
-- **Dynamic Loading**: Auto-refreshing data and status
-- **Advanced Filtering**: Search and filter with instant results
-- **Export Functionality**: Download data as JSON
-- **Modal Dialogs**: Clean interface for actions
-
-### Usage
-1. Open http://localhost:4000 in your browser
-2. Select map and type to find locations
-3. Use the data browser to explore all locations
-4. Access wiki updates and system status from the navigation
-
-## 📁 Project Structure
-
-```
-asa-service/
-├── backend.js              # Main server application
-├── init-db.sql            # Database initialization script
-├── setup.ps1              # Windows setup script
-├── package.json           # Node.js dependencies
-├── .env                   # Environment configuration
-├── data/                  # CSV data files
-│   ├── Ragnarok.csv
-│   ├── TheIsland.csv
-│   └── ...
-├── frontend/              # Web interface
-│   ├── index.html        # Modern UI
-│   └── nginx.conf        # Nginx configuration
-├── docs/                 # Documentation
-└── tests/               # Test files
-```
-
-## 🔧 Configuration
-
-### Wiki Update Configuration
-The service automatically fetches data from the official ARK wiki:
-- **Schedule**: Every 6 hours (configurable)
-- **Source**: https://ark.wiki.gg/ official wiki API
-- **Fallback**: CSV files used when wiki is unavailable
-- **Manual Trigger**: Available via API or UI
-
-### Performance Tuning
-```javascript
-// Connection pool settings
-const db = new Pool({
-  max: 20,          // Maximum connections
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-});
-
-// Pagination settings
-const DEFAULT_LIMIT = 50;
-const MAX_LIMIT = 1000;
-```
+### 🎮 Planned Features
+- **📍 Interactive Maps**: Visual map coordinates and POI markers
+- **📈 Statistics Dashboard**: Creature popularity and taming trends
+- **🔔 Update Notifications**: Real-time wiki updates and new content
+- **👥 User Accounts**: Save favorites and custom taming presets
+- **📱 Mobile App**: Native mobile application
+- **🔌 API Webhooks**: Real-time data notifications
 
 ## 🚨 Troubleshooting
 
 ### Common Issues
 
-#### Database Connection Failed
+#### ❌ "Port 3000 already in use"
 ```bash
-# Check PostgreSQL service
+# Windows: Find and kill process
+netstat -ano | findstr :3000
+taskkill /PID <process_id> /F
+
+# Or use different port
+set PORT=3001 && npm start
+```
+
+#### ❌ "Database connection failed"
+```bash
+# Use mock data mode (recommended for development)
+set SKIP_DATABASE=true && npm start
+# Or for PowerShell:
+$env:SKIP_DATABASE="true"; npm start
+
+# Or check PostgreSQL service
 sc query postgresql-x64-13  # Windows
 systemctl status postgresql  # Linux
-
-# Test connection manually
-psql -U postgres -d asa_maps -c "SELECT 1;"
 ```
 
-#### Service won't start
+#### ❌ "Module not found"
 ```bash
-# Check port availability
-netstat -an | findstr :4000  # Windows
-lsof -i :4000                # Linux/macOS
-
-# Check logs
-npm start  # View console output
-```
-
-#### Wiki updates failing
-```bash
-# Check internet connection
-curl https://ark.wiki.gg/
-
-# Manual wiki update
-curl -X POST http://localhost:4000/wiki_update \
-  -H "Content-Type: application/json" \
-  -d '{"map": "all"}'
-```
-
-### CSV-Only Mode
-If database connection fails, the service automatically falls back to CSV mode:
-- All read operations work normally
-- Add/Delete operations save to memory only
-- Data persists only during session
-- Status API shows current mode
-
-## 🔄 Development
-
-### Development Setup
-```bash
-# Install with dev dependencies
+# Clear cache and reinstall
+rm -rf node_modules package-lock.json  # Linux/macOS
+rmdir /s node_modules & del package-lock.json  # Windows
 npm install
-
-# Start with auto-reload
-npm run dev
-
-# Or use the setup script
-.\setup.ps1 -Development
 ```
 
-### API Testing
+#### ❌ "Tests failing"
 ```bash
-# Test all endpoints
-curl http://localhost:4000/status
-curl http://localhost:4000/maps
-curl -X POST http://localhost:4000/nearest \
-  -H "Content-Type: application/json" \
-  -d '{"map":"Ragnarok","type":"resource","lat":50,"lon":50}'
+# Run tests individually to identify issues
+npm run test:unit
+npm run test:integration
+npm run test:e2e
 ```
 
-## 📈 Monitoring
+### Performance Tips
 
-### Health Checks
+#### Faster Startup
 ```bash
-# Service health
-curl http://localhost:4000/status
+# Skip data synchronization for development
+npm run start:quick
+```
 
-# Database health
-curl http://localhost:4000/status | jq '.database'
+#### Memory Usage
+```bash
+# Limit database connections
+set DB_POOL_SIZE=5 && npm start
+```
 
-# Wiki update status
-curl http://localhost:4000/wiki_status
+#### Debug Mode
+```bash
+# Enable detailed logging
+set DEBUG=asa-service:* && npm run dev
 ```
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Make your changes** following the established patterns
+4. **Add tests** for new functionality: `npm run test:watch`
+5. **Run the full test suite**: `npm run test:all`
+6. **Check code style**: `npm run lint:fix`
+7. **Commit your changes**: `git commit -m 'Add amazing feature'`
+8. **Push to the branch**: `git push origin feature/amazing-feature`
+9. **Open a Pull Request** with detailed description
+
+### Development Guidelines
+
+#### Code Style
+- ESLint configuration enforces consistent style
+- Use `npm run lint:fix` to auto-fix style issues
+- Follow existing patterns for route handlers and services
+- Add JSDoc comments for functions and classes
+
+#### Testing Requirements
+- Add unit tests for all new functions
+- Include integration tests for new API endpoints
+- Update E2E tests if UI changes are made
+- Maintain test coverage above 80%
+
+#### Documentation
+- Update README.md for new features
+- Add API documentation for new endpoints
+- Include example usage in code comments
+- Update CHANGELOG.md with notable changes
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- ARK: Survival Ascended community for map data
-- Official ARK Wiki for coordinate information
-- Contributors and testers
+- **ARK: Survival Ascended** community for inspiration and testing
+- **Official ARK Wiki** (https://ark.wiki.gg/) for creature and map data
+- **DodoDex** (https://www.dododex.com/) for taming calculations
+- **Node.js & Express** community for excellent documentation
+- **All contributors** who help improve this project
 
+## � Support
 
-```bash
-./fetch_wiki_coords.sh The_Island --update
-```
+- **GitHub Issues**: Report bugs and request features
+- **Discussions**: Ask questions and share ideas
+- **Wiki**: Detailed guides and advanced usage
+- **API Docs**: Complete endpoint reference at `/api/docs`
 
-Repeat for each map you wish to populate.
-The updated CSVs will then contain the official wiki coordinates used by the service.
+---
+
+**Made with ❤️ for the ARK: Survival Ascended community**
